@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "ReYou",
+  "version": "1.0",
+  "description": "유튜브 영상 자동 복습 프로그램",
+  "action": {
+    "default_popup": "popup/popup.html"
+  },
+  "background": {
+    "service_worker": "service-worker.js",
+    "type": "module"
+  },
+  "host_permissions": ["https://youtube.com/*", "https://www.youtube.com/*"],
+  "permissions": ["storage", "alarms", "notification"],
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/playlist?list=*"],
+      "js": ["content.js"]
+    }
+  ]
+}
