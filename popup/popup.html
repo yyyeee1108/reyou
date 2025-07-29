@@ -6,6 +6,17 @@
     <link rel="stylesheet" href="./popup.css" />
   </head>
   <body>
+    <!-- <template> 재사용 가능한 html 틀 -->
+    <template id="li_template">
+      <li>
+        <p class="video-title">video title</p>
+      </li>
+    </template>
+    <h3>복습할 영상</h3>
+    <!-- <ul> 안에 복습할 영상 목록 동적 추가 -->
+    <ul id="reviewVideoList"></ul>
+    <div class="button-container"><button id="startBtn">start</button></div>
+
     <script src="./popup.js" type="module"></script>
   </body>
 </html>
