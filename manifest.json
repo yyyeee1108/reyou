@@ -11,10 +11,10 @@
     "type": "module"
   },
   "host_permissions": ["https://youtube.com/*", "https://www.youtube.com/*"],
-  "permissions": ["storage", "alarms", "notification"],
+  "permissions": ["storage", "alarms"],
   "content_scripts": [
     {
-      "matches": ["https://www.youtube.com/playlist?list=*"],
+      "matches": ["*://www.youtube.com/playlist?list=*"],
       "js": ["content.js"]
     }
   ]
