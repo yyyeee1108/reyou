@@ -9,6 +9,13 @@ extractPlaylistId(currentUrl);
 function extractPlaylistId(currentUrl) {
   const playlistId = new URL(currentUrl).searchParams.get('list');
   console.log(`[ReYou] 현재 재생목록의 ID: ${playlistId}`);
+
+  if (playlistId) {
+    chrome.runtime.sendMessage({
+      type: 'PLAYLIST_ID',
+      playlistId,
+    });
+  }
 }
 
 const urlObserver = new MutationObserver(() => {
