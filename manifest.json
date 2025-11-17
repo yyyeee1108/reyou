@@ -14,7 +14,7 @@
   "permissions": ["storage", "alarms"],
   "content_scripts": [
     {
-      "matches": ["*://www.youtube.com/*"],
+      "matches": ["*://www.youtube.com/playlist*"],
       "js": ["content.js"]
     }
   ]
