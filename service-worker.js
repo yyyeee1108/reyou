@@ -24,6 +24,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
+// storage에 이미 저장된 키인지 확인(중복 확인)
+async function isDupllicatePlaylistId(id) {
+  const { playlists } = await chrome.storage.local.get('playlists');
+  if (playlists) {
+    for (let pl of playlists) {
+      if (pl.playlistId == id) {
+        console.log(`[ReYou] 이미 존재하는 id ${pl.playlistId} -> skip`);
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 // 재생목록 영상 목록 얻기
 async function getPlaylistVideos(
   playlistId,
@@ -32,6 +46,13 @@ async function getPlaylistVideos(
   videos = []
 ) {
   console.log('[ReYou] getPlaylistVideo 실행');
+
+  // 이미 저장된 재생목록 ID일 경우 실행 중단
+  if (await isDupllicatePlaylistId(playlistId)) {
+    console.log(`[ReYou] playlistId 중복 확인함. getPlaylistVideos 실행 중단`);
+    return;
+  }
+
   let url = `${PLAYLIST_ITEMS_URL}?key=${API_KEY}&maxResults=50&part=snippet&playlistId=${playlistId}`;
 
   // 페이징(다음 페이지가 있다면 요청 파라미터에 추가)
@@ -78,6 +99,7 @@ async function getPlaylistVideos(
 // 재생목록 URL 변경 시 content.js를 다시 삽입
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete' && tab.url.includes('playlist?list=')) {
+    console.log(`[ReYou] content.js를 재삽입합니다.`);
     chrome.scripting.executeScript({
       target: { tabId: tabId },
       files: ['content.js'],
