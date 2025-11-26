@@ -98,7 +98,11 @@ async function getPlaylistVideos(
 
 // 재생목록 URL 변경 시 content.js를 다시 삽입
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete' && tab.url.includes('playlist?list=')) {
+  if (
+    changeInfo.status === 'complete' &&
+    changeInfo.url &&
+    tab.url.includes('playlist?list=')
+  ) {
     console.log(`[ReYou] content.js를 재삽입합니다.`);
     chrome.scripting.executeScript({
       target: { tabId: tabId },
