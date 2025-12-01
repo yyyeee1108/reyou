@@ -1,0 +1,150 @@
+:root {
+  --popup-width: 336px;
+  --card-height: 188px;
+  --primary-color: #00d46a;
+  --text-white: #ffffff;
+}
+
+body {
+  width: var(--popup-width);
+  margin: 0;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 뒤로가기 버튼 */
+.top-bar {
+  position: relative;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  margin-bottom: 2em;
+}
+
+.back-btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background-color: transparent;
+  opacity: 0.2;
+  font-size: 20px;
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.back-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.page-title {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  font-weight: 300;
+  font-size: 14px;
+  color: #3e3e3e;
+}
+
+/* 재생목록 카드 */
+.card {
+  position: relative;
+  width: 100%;
+  height: var(--card-height);
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+/* Thumbnail 작업 */
+.thumbnail-area {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.thumbnail-area img {
+  width: 100%;
+  height: 100%;
+  /* object-fit은 contain/cover가 적당할 듯 */
+  object-fit: cover;
+  background-color: #000000;
+}
+
+.thumbnail-area::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+}
+
+/* 영상 정보 */
+.info-area {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  padding: 15px;
+  color: var(--text-white);
+  box-sizing: border-box;
+}
+
+.info-area h3 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.channel {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.channel img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.stats {
+  display: flex;
+  gap: 5px;
+}
+
+/* 추가 버튼 */
+#addPlaylistBtn {
+  margin-top: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#addPlaylistBtn:hover {
+  transform: scale(1.1);
+  transition: 0.2s;
+}

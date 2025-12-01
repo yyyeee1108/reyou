@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="add_playlist.css" />
+    <title>ReYou Add Playlist Page</title>
+  </head>
+  <body>
+    <header class="top-bar">
+      <button id="backBtn" class="back-btn"><</button>
+      <span class="page-title">재생목록 추가</span>
+    </header>
+    <div class="card">
+      <div class="thumbnail-area">
+        <img
+          id="playlistThumbnail"
+          src="../assets/mock_image/mock_playlist_thumbnail_3.jpg"
+          alt="playlist thumbnail"
+        />
+      </div>
+
+      <div class="info-area">
+        <h3 id="playlistTitle">재생목록 제목</h3>
+
+        <div class="meta">
+          <div class="channel">
+            <img
+              src="../assets/mock_image/mock_channel_profile_3.jpg"
+              alt="channel Profile Image"
+              id="channelImg"
+            />
+            <p id="channelName">게시자: 채널명</p>
+          </div>
+          <div class="stats">
+            <p id="videoCnt">동영상 0개</p>
+            <p id="videoViews">조회수 0회</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button id="addPlaylistBtn">+</button>
+
+    <script type="module" src="add_playlist.js"></script>
+  </body>
+</html>
