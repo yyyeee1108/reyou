@@ -8,6 +8,7 @@ const channelName = document.getElementById('channelName');
 const videoCnt = document.getElementById('videoCnt');
 const videoViews = document.getElementById('videoViews');
 const addPlaylistBtn = document.getElementById('addPlaylistBtn');
+const backBtn = document.getElementById('backBtn');
 
 // 현재 탭(재생목록 페이지) 정보 얻어 content.js에 파싱 요청
 chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
@@ -34,3 +35,8 @@ function updateUI(data) {
   videoCnt.innerText = `동영상 ${data.videoCnt}개`;
   videoViews.innerText = `조회수 ${data.videoViews}회`;
 }
+
+// 뒤로가기 버튼 이벤트 -> 메인 팝업 화면으로 전환
+backBtn.addEventListener('click', () => {
+  window.location.href = 'popup.html';
+});
