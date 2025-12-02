@@ -1,0 +1,36 @@
+console.log('[ReYou] add_playlist.js 실행');
+
+// DOM 요소 가져오기
+const title = document.getElementById('playlistTitle');
+const thumbnail = document.getElementById('playlistThumbnail');
+const channelImg = document.getElementById('channelImg');
+const channelName = document.getElementById('channelName');
+const videoCnt = document.getElementById('videoCnt');
+const videoViews = document.getElementById('videoViews');
+const addPlaylistBtn = document.getElementById('addPlaylistBtn');
+
+// 현재 탭(재생목록 페이지) 정보 얻어 content.js에 파싱 요청
+chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
+  var activeTabId = tabs[0].id;
+  console.log(activeTabId);
+
+  // content.js에 재생목록 정보 파싱 요청
+  chrome.tabs.sendMessage(
+    activeTabId,
+    { type: 'GET_PARSE_PLAYLIST_INFO' },
+    (response) => {
+      console.log(response);
+      updateUI(response);
+    }
+  );
+});
+
+// 파싱한 데이터로 팝업의 UI 업데이트
+function updateUI(data) {
+  title.innerText = data.title;
+  thumbnail.src = data.thumbnail;
+  channelImg.src = data.channelImg;
+  channelName.innerText = `게시자: ${data.channelName}`;
+  videoCnt.innerText = `동영상 ${data.videoCnt}개`;
+  videoViews.innerText = `조회수 ${data.videoViews}회`;
+}
