@@ -14,7 +14,7 @@ chrome.runtime.onInstalled.addListener(({ reason }) => {
   }
 });
 
-// content.js로부터 재생목록 id 수신 시 작동
+// add_playlist.js로부터 재생목록 id 수신 시 작동
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'PLAYLIST_ID') {
     let playlistId = message.playlistId;
