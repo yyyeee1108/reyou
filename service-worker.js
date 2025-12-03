@@ -57,7 +57,7 @@ async function getPlaylistVideos(
     return;
   }
 
-  let url = `${PLAYLIST_ITEMS_URL}?key=${API_KEY}&maxResults=50&part=snippet&playlistId=${playlistId}`;
+  let url = `${PLAYLIST_ITEMS_URL}?key=${API_KEY}&maxResults=50&part=snippet,status&playlistId=${playlistId}`;
 
   // 페이징(다음 페이지가 있다면 요청 파라미터에 추가)
   if (nextPageToken) {
@@ -74,9 +74,18 @@ async function getPlaylistVideos(
   const items = data.items;
   items.forEach((item, index) => {
     const title = item.snippet.title;
-    const channel = item.snippet.videoOwnerChannelTitle;
+    const channelName = item.snippet.videoOwnerChannelTitle;
+    const videoId = item.snippet.resourceId.videoId;
+    const videoThumbnail = item.snippet.thumbnails.default.url;
+    const privacyStatus = item.status.privacyStatus;
 
-    const video = { title: title, channel: channel };
+    const video = {
+      title: title,
+      channelName: channelName,
+      videoId: videoId,
+      videoThumbnail: videoThumbnail,
+      privacyStatus: privacyStatus,
+    };
     videos.push(video);
   });
 
