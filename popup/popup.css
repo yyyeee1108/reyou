@@ -103,7 +103,7 @@ body {
   gap: 5px;
 }
 
-.msg {
+#msg {
   font-size: 14px;
   margin-top: 50px;
   text-align: center;
