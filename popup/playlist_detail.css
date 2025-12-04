@@ -1,0 +1,153 @@
+:root {
+  --bg-color: #ffffff;
+  --card-bg-b: #000000;
+  --card-hover-bg-b: #4d4d4d;
+  --text-white: #fff;
+  --text-lightgray: #c9c9c9;
+  --primary-color: #00d46a;
+  --playlist-height: 188px;
+}
+
+/* 상단 네비게이션 영역 */
+.top-bar {
+  position: relative;
+  justify-content: left;
+}
+
+.back-btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background-color: transparent;
+  opacity: 0.2;
+  font-size: 20px;
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.back-btn:hover {
+  background-color: var(--card-hover-bg);
+}
+
+.page-title {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  font-weight: 300;
+  font-size: 14px;
+  color: var(--text-black);
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  max-width: 200px;
+  text-align: center;
+}
+
+/* 재생목록 썸네일 영역 */
+.playlist-total-container {
+  position: relative;
+  width: 100%;
+  height: var(--playlist-height);
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.playlist-thumbnail-area {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+  overflow: hidden;
+}
+
+.playlist-thumbnail-area img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-color: #000000;
+}
+
+.playlist-thumbnail-area::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+}
+
+/* 재생목록 정보 */
+.playlist-info-area {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  padding: 15px;
+  color: var(--text-white);
+  box-sizing: border-box;
+}
+
+.playlist-info-area h3 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.playlist-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+/* 재생 버튼 */
+#playBtn {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: 13%;
+  right: 8%;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  will-change: transform;
+
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+#playBtn:hover {
+  transform: scale(1.1);
+}
+
+#playBtn svg {
+  width: 32px;
+  height: 32px;
+  pointer-events: none;
+}
+
+.video-title {
+  font-size: 14px;
+  margin: 0 0 8px 0;
+  color: var(--text-black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

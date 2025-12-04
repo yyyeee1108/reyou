@@ -1,7 +1,7 @@
 :root {
   --popup-width: 336px;
   --primary-color: #00d46a;
-  --text-black: #363636;
+  --text-black: #3e3e3e;
   --text-gray: #4d4d4d;
   --card-bg: #ffffff;
   --card-hover-bg: #e8e8e8;
@@ -103,7 +103,7 @@ body {
   gap: 5px;
 }
 
-#msg {
+.msg {
   font-size: 14px;
   margin-top: 50px;
   text-align: center;

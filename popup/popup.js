@@ -13,7 +13,7 @@ async function loadContent() {
   console.log('popup.js data:', data);
 
   if (data.length === 0) {
-    document.getElementById('msg').textContent = '저장한 재생목록이 없습니다';
+    document.querySelector('.msg').textContent = '저장한 재생목록이 없습니다';
     return;
   }
 
