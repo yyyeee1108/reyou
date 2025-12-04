@@ -3,7 +3,9 @@ import { API_KEY } from './config.js';
 console.log('[ReYou] service-worker.js 로드');
 
 const PLAYLIST_ITEMS_URL =
-  'https://www.googleapis.com/youtube/v3/playlistItems';
+  'https://www.googleapis.com/youtube/v3/playlistItems?maxResults=50&part=snippet,status';
+const PLAYLISTS_URL =
+  'https://www.googleapis.com/youtube/v3/playlists?part=snippet,contentDetails,status';
 let refreshFlag = false;
 
 // 확장 프로그램 설치 시 작동
@@ -33,7 +35,7 @@ async function isDupllicatePlaylistId(id) {
   const { playlists } = await chrome.storage.local.get('playlists');
   if (playlists) {
     for (let pl of playlists) {
-      if (pl.playlistId == id) {
+      if (pl.playlistInfo.playlistId == id) {
         console.log(`[ReYou] 이미 존재하는 id ${pl.playlistId} -> skip`);
         return true;
       }
@@ -57,7 +59,7 @@ async function getPlaylistVideos(
     return;
   }
 
-  let url = `${PLAYLIST_ITEMS_URL}?key=${API_KEY}&maxResults=50&part=snippet,status&playlistId=${playlistId}`;
+  let url = `${PLAYLIST_ITEMS_URL}&key=${API_KEY}&playlistId=${playlistId}`;
 
   // 페이징(다음 페이지가 있다면 요청 파라미터에 추가)
   if (nextPageToken) {
@@ -92,7 +94,12 @@ async function getPlaylistVideos(
   // 다음 페이지 부르기
   if (data.nextPageToken) {
     console.log(data.nextPageToken);
-    getPlaylistVideos(playlistId, data.nextPageToken, lastIndex + 1, videos);
+    await getPlaylistVideos(
+      playlistId,
+      data.nextPageToken,
+      lastIndex + 1,
+      videos
+    );
   }
 
   // 마지막 페이지일 때
@@ -101,24 +108,45 @@ async function getPlaylistVideos(
     (data.prevPageToken == undefined && data.nextPageToken == undefined)
   ) {
     console.log(`[ReYou] 순회 끝\nvideos입니다\n`, videos);
+    const playlistInfo = await getPlaylistInfo(playlistId);
     const { playlists } = await chrome.storage.local.get('playlists');
 
-    playlists.push({ playlistId: playlistId, videos: videos });
+    playlists.push({ playlistInfo: playlistInfo, videos: videos });
 
     chrome.storage.local.set({ playlists });
   }
 }
 
+// 재생목록의 정보(제목, 작성자, 썸네일, 영상 개수, 조회수)를 얻는 함수
+async function getPlaylistInfo(playlistId) {
+  let url = `${PLAYLISTS_URL}&key=${API_KEY}&id=${playlistId}`;
+
+  const response = await fetch(url, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const data = await response.json();
+  const item = data.items[0];
+
+  const title = item.snippet.localized.title;
+  const channelName = item.snippet.channelTitle;
+  const playlistThumbnail = item.snippet.thumbnails.default.url;
+  const privacyStatus = item.status.privacyStatus;
+
+  const playlistInfo = {
+    title: title,
+    channelName: channelName,
+    playlistId: playlistId,
+    playlistThumbnail: playlistThumbnail,
+    privacyStatus: privacyStatus,
+  };
+  return playlistInfo;
+}
+
 // 재생목록 URL 변경 시 content.js를 다시 삽입
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  console.log(
-    '[ReYou - changeInfo]',
-    changeInfo,
-    '\n[ReYou - tab]',
-    tab,
-    '======================\n'
-  );
-
   // Loading 중 새로고침 감지
   if (
     changeInfo.status === 'loading' &&

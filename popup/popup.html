@@ -4,18 +4,39 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./popup.css" />
+    <title>ReYou Home</title>
   </head>
   <body>
+    <header class="top-bar">
+      <span class="page-title">복습할 재생목록</span>
+    </header>
+    <div id="playlist-list-container">
+      <p id="msg">불러오는 중...</p>
+    </div>
+
     <!-- <template> 재사용 가능한 html 틀 -->
-    <template id="li_template">
-      <li>
-        <p class="video-title">video title</p>
-      </li>
+    <template id="playlist-card-template">
+      <div class="card">
+        <div class="index">1</div>
+        <div class="content">
+          <div class="thumbnail-area">
+            <img
+              class="thumbnail-img"
+              src="../assets/mock_image/mock_playlist_thumbnail_2.jpg"
+              alt="playlist thumbnail"
+            />
+          </div>
+        </div>
+        <div class="info-area">
+          <h3 class="playlist-title">재생목록 제목</h3>
+          <div class="meta">
+            <span class="channel-name">채널명</span>
+            <span>•</span>
+            <span class="video-count">동영상 0개</span>
+          </div>
+        </div>
+      </div>
     </template>
-    <h3>복습할 영상</h3>
-    <!-- <ul> 안에 복습할 영상 목록 동적 추가 -->
-    <ul id="reviewVideoList"></ul>
-    <div class="button-container"><button id="startBtn">start</button></div>
 
     <script src="./popup.js" type="module"></script>
   </body>
