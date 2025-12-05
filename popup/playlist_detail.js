@@ -36,6 +36,38 @@ playlistTitle.textContent = playlistInfo.title;
 playlistChannelName.textContent = `게시자: ${playlistInfo.channelName}`;
 videoCount.textContent = `동영상 ${videos.length}개`;
 
+// 2. 동영상 목록 로드
+// DOM 요소 가져오기
+const videoListContainer = document.getElementById('video-list-container');
+const template = document.getElementById('video-card-template');
+
+videoListContainer.innerHTML = '';
+
+videos.forEach((item, index) => {
+  // template 복제
+  const clone = document.importNode(template.content, true);
+  console.log('clone: ', clone);
+
+  // 재생목록 정보 요소 가져오기
+  const card = clone.querySelector('.card');
+  const cardIndex = clone.querySelector('.index');
+  const thumbnail = clone.querySelector('.thumbnail-img');
+  const title = clone.querySelector('.video-title');
+  const channelName = clone.querySelector('.channel-name');
+
+  // 데이터 배치
+  cardIndex.textContent = index + 1;
+  thumbnail.src = item.videoThumbnail;
+  title.textContent = item.title;
+  channelName.textContent = item.channelName;
+
+  // data-id(dataset)에 동영상 ID 저장
+  card.dataset.id = item.videoId;
+
+  // 컨테이너에 추가
+  videoListContainer.appendChild(clone);
+});
+
 async function getPlaylistData(playlistId) {
   for (const item of (await chrome.storage.local.get('playlists')).playlists) {
     if (item.playlistInfo.playlistId === playlistId) {

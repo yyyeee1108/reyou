@@ -58,6 +58,7 @@
   height: var(--playlist-height);
   border-radius: 15px;
   overflow: hidden;
+  margin-bottom: 30px;
 }
 
 .playlist-thumbnail-area {
