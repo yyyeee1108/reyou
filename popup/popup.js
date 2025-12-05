@@ -54,6 +54,11 @@ function updateUI(data, playlistContainer) {
     // data-id(dataset)에 재생목록 ID 저장
     card.dataset.id = item.playlistInfo.playlistId;
 
+    // 항목 클릭 시 상세 페이지로 이동하는 이벤트
+    card.addEventListener('click', () => {
+      window.location.href = `playlist_detail.html?id=${playlistInfo.playlistId}`;
+    });
+
     // 컨테이너에 추가
     playlistContainer.appendChild(clone);
   });
