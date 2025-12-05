@@ -46,7 +46,7 @@ function updateUI(data, playlistContainer) {
 
     // 데이터 배치
     cardIndex.textContent = index + 1;
-    thumbnail.src = playlistInfo.playlistThumbnail;
+    thumbnail.src = playlistInfo.playlistThumbnailDefault;
     title.textContent = playlistInfo.title;
     channelName.textContent = playlistInfo.channelName;
     videoCount.textContent = `동영상 ${item.videos.length}개`;
