@@ -7,10 +7,15 @@
   --card-hover-bg: #e8e8e8;
 }
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 body {
   width: var(--popup-width);
   margin: 0;
   padding: 10px;
+  -ms-overflow-style: none;
 }
 
 .top-bar {

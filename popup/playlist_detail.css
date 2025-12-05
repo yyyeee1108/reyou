@@ -8,6 +8,14 @@
   --playlist-height: 188px;
 }
 
+::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  -ms-overflow-style: none;
+}
+
 /* 상단 네비게이션 영역 */
 .top-bar {
   position: relative;
