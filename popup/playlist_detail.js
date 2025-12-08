@@ -76,3 +76,59 @@ async function getPlaylistData(playlistId) {
   }
   return;
 }
+
+// 재생버튼 클릭
+const playButton = document.getElementById('playBtn');
+
+playButton.addEventListener('click', () => {
+  console.log('click 이벤트 발생');
+
+  const firstVideoId = videos[0].videoId;
+
+  const playUrl = `https://www.youtube.com/watch?v=${firstVideoId}&list=${playlistId}`;
+
+  // 2. 창 크기 설정 (원하는 대로 조절 가능)
+  const width = 480;
+  const height = 270; // 16:9 비율
+
+  // 3. 미니 팝업 윈도우 생성
+  chrome.windows.create(
+    {
+      url: playUrl,
+      type: 'popup', // 'popup' 타입은 주소창/탭바가 없는 깔끔한 창입니다
+      width: width,
+      height: height,
+      focused: true, // 창을 바로 활성화
+      // left, top 값을 계산해서 모니터 구석에 띄울 수도 있습니다 (선택사항)
+    },
+    (newWindow) => {
+      if (newWindow && newWindow.tabs) {
+        const targetTabId = newWindow.tabs[0].id;
+
+        const updateListener = (tabId, changeInfo, tab) => {
+          if (tabId === targetTabId && changeInfo.status === 'complete') {
+            chrome.tabs.onUpdated.removeListener(updateListener);
+            const cssCode = `
+                body {overflow: hidden !important}
+                #masthead-container{
+                  display: none !important;
+                }
+            `;
+            chrome.scripting
+              .insertCSS({
+                target: { tabId: tabId },
+                css: cssCode,
+              })
+              .then(() => {
+                console.log('[ReYou] CSS 주입 성공!');
+              })
+              .catch((err) => {
+                console.error('[ReYou] CSS 주입 실패:', err);
+              });
+          }
+        };
+        chrome.tabs.onUpdated.addListener(updateListener);
+      }
+    }
+  );
+});
