@@ -132,14 +132,16 @@ async function getPlaylistInfo(playlistId) {
 
   const title = item.snippet.localized.title;
   const channelName = item.snippet.channelTitle;
-  const playlistThumbnail = item.snippet.thumbnails.default.url;
+  const playlistThumbnailDefault = item.snippet.thumbnails.default.url;
+  const playlistThumbnailDetail = item.snippet.thumbnails.medium.url;
   const privacyStatus = item.status.privacyStatus;
 
   const playlistInfo = {
     title: title,
     channelName: channelName,
     playlistId: playlistId,
-    playlistThumbnail: playlistThumbnail,
+    playlistThumbnailDefault: playlistThumbnailDefault,
+    playlistThumbnailDetail: playlistThumbnailDetail,
     privacyStatus: privacyStatus,
   };
   return playlistInfo;

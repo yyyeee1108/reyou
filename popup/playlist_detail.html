@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>playlist_detail</title>
+    <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="playlist_detail.css" />
+  </head>
+  <body>
+    <header class="top-bar">
+      <button id="backBtn" class="back-btn"><</button>
+      <div>
+        <span class="page-title">재생목록 제목</span>
+      </div>
+    </header>
+    <div class="playlist-total-container">
+      <div class="playlist-thumbnail-area">
+        <img
+          src="../assets/mock_image/mock_playlist_thumbnail_3.jpg"
+          alt="playlist thumbnail"
+          id="playlistThumbnail"
+        />
+      </div>
+      <div class="playlist-info-area">
+        <h3 id="playlistTitle">재생목록 제목</h3>
+        <div class="playlist-meta">
+          <p id="playlistChannelName">게시자: 채널명</p>
+          <p id="videoCnt">동영상 0개</p>
+        </div>
+      </div>
+      <button id="playBtn">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="#ffffff"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M8 5V19L19 12L8 5Z" />
+        </svg>
+      </button>
+    </div>
+
+    <div id="video-list-container">
+      <p class="msg">불러오는 중...</p>
+    </div>
+
+    <!-- <template> 재사용 가능한 html 틀 -->
+    <template id="video-card-template">
+      <div class="card">
+        <div class="index">1</div>
+        <div class="content">
+          <div class="thumbnail-area">
+            <img
+              class="thumbnail-img"
+              src="../assets/mock_image/mock_video_thumbnail_1.jpg"
+              alt="video thumbnail"
+            />
+          </div>
+        </div>
+        <div class="info-area">
+          <h3 class="video-title">동영상 제목</h3>
+          <div class="meta">
+            <span class="channel-name">채널명</span>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <script src="./playlist_detail.js" type="module"></script>
+  </body>
+</html>

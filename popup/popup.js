@@ -13,7 +13,7 @@ async function loadContent() {
   console.log('popup.js data:', data);
 
   if (data.length === 0) {
-    document.getElementById('msg').textContent = '저장한 재생목록이 없습니다';
+    document.querySelector('.msg').textContent = '저장한 재생목록이 없습니다';
     return;
   }
 
@@ -46,13 +46,18 @@ function updateUI(data, playlistContainer) {
 
     // 데이터 배치
     cardIndex.textContent = index + 1;
-    thumbnail.src = playlistInfo.playlistThumbnail;
+    thumbnail.src = playlistInfo.playlistThumbnailDefault;
     title.textContent = playlistInfo.title;
     channelName.textContent = playlistInfo.channelName;
     videoCount.textContent = `동영상 ${item.videos.length}개`;
 
     // data-id(dataset)에 재생목록 ID 저장
     card.dataset.id = item.playlistInfo.playlistId;
+
+    // 항목 클릭 시 상세 페이지로 이동하는 이벤트
+    card.addEventListener('click', () => {
+      window.location.href = `playlist_detail.html?id=${playlistInfo.playlistId}`;
+    });
 
     // 컨테이너에 추가
     playlistContainer.appendChild(clone);
