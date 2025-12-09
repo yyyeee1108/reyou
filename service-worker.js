@@ -73,11 +73,14 @@ async function getPlaylistVideos(
   const items = data.items;
   console.log('items: ', items);
   items.forEach((item, index) => {
+    const privacyStatus = item.status.privacyStatus;
+    if (privacyStatus === 'private') {
+      return;
+    }
     const title = item.snippet.title;
     const channelName = item.snippet.videoOwnerChannelTitle;
     const videoId = item.snippet.resourceId.videoId;
     const videoThumbnail = item.snippet.thumbnails.default.url;
-    const privacyStatus = item.status.privacyStatus;
 
     const video = {
       title: title,
