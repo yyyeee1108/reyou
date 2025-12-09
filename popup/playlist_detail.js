@@ -69,12 +69,10 @@ videos.forEach((item, index) => {
 });
 
 async function getPlaylistData(playlistId) {
-  for (const item of (await chrome.storage.local.get('playlists')).playlists) {
-    if (item.playlistInfo.playlistId === playlistId) {
-      return item;
-    }
-  }
-  return;
+  const data = (await chrome.storage.local.get('playlists')).playlists[
+    playlistId
+  ];
+  return data;
 }
 
 // 재생버튼 클릭

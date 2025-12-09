@@ -12,7 +12,7 @@ async function loadContent() {
   const data = (await chrome.storage.local.get('playlists')).playlists;
   console.log('popup.js data:', data);
 
-  if (data.length === 0) {
+  if (Object.keys(data).length === 0) {
     document.querySelector('.msg').textContent = '저장한 재생목록이 없습니다';
     return;
   }
@@ -29,7 +29,7 @@ function updateUI(data, playlistContainer) {
   // template DOM 요소 가져오기
   const template = document.getElementById('playlist-card-template');
 
-  data.forEach((item, index) => {
+  Object.entries(data).forEach(([id, item], index) => {
     // template 복제
     const clone = document.importNode(template.content, true);
     console.log('clone: ', clone);

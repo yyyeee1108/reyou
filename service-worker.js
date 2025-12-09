@@ -1,4 +1,5 @@
 import { API_KEY } from './config.js';
+import { calculateNextDate } from './utils.js';
 
 console.log('[ReYou] service-worker.js 로드');
 
@@ -12,7 +13,7 @@ let refreshFlag = false;
 chrome.runtime.onInstalled.addListener(({ reason }) => {
   if (reason === chrome.runtime.OnInstalledReason.INSTALL) {
     console.log('[ReYou] 설치 완료');
-    chrome.storage.local.set({ playlists: [] });
+    chrome.storage.local.set({ playlists: {} });
   }
 });
 
@@ -34,12 +35,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 async function isDupllicatePlaylistId(id) {
   const { playlists } = await chrome.storage.local.get('playlists');
   if (playlists) {
-    for (let pl of playlists) {
-      if (pl.playlistInfo.playlistId == id) {
-        console.log(`[ReYou] 이미 존재하는 id ${pl.playlistId} -> skip`);
-        return true;
-      }
-    }
+    console.log('playlists dup:', playlists);
+    return id in playlists;
   }
   return false;
 }
@@ -74,6 +71,7 @@ async function getPlaylistVideos(
 
   const data = await response.json();
   const items = data.items;
+  console.log('items: ', items);
   items.forEach((item, index) => {
     const title = item.snippet.title;
     const channelName = item.snippet.videoOwnerChannelTitle;
@@ -109,9 +107,20 @@ async function getPlaylistVideos(
   ) {
     console.log(`[ReYou] 순회 끝\nvideos입니다\n`, videos);
     const playlistInfo = await getPlaylistInfo(playlistId);
+    const reviewState = {
+      stage: 0,
+      lastReviewDate: new Date().toISOString(),
+      nextReviewDate: calculateNextDate(0),
+      isCompleted: false,
+    };
     const { playlists } = await chrome.storage.local.get('playlists');
 
-    playlists.push({ playlistInfo: playlistInfo, videos: videos });
+    playlists[playlistId] = {
+      playlistInfo: playlistInfo,
+      reviewState: reviewState,
+      videos: videos,
+      addedAt: Date.now(),
+    };
 
     chrome.storage.local.set({ playlists });
   }
