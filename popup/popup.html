@@ -8,8 +8,21 @@
   </head>
   <body>
     <header class="top-bar">
-      <span class="page-title">복습할 재생목록</span>
+      <span class="page-title">ReYou</span>
     </header>
+    <div class="filter-container">
+      <button class="filter-btn selected" data-filter="due" FilterBtnDue>
+        오늘
+      </button>
+      <button class="filter-btn" data-filter="new" FilterBtnNew>시작 전</button>
+      <button class="filter-btn" data-filter="in-progress" FilterBtnInProgress>
+        학습 중
+      </button>
+      <button class="filter-btn" data-filter="completed" FilterBtnCompleted>
+        완료
+      </button>
+      <button class="filter-btn" data-filter="all" FilterBtnAll>전체</button>
+    </div>
     <div id="playlist-list-container">
       <p class="msg">불러오는 중...</p>
     </div>
@@ -34,6 +47,10 @@
             <span>•</span>
             <span class="video-count">동영상 0개</span>
           </div>
+        </div>
+        <div class="review-state">
+          <span class="review-badge">badge</span>
+          <span class="dday-text">dday</span>
         </div>
       </div>
     </template>
