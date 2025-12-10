@@ -1,4 +1,10 @@
-import { getReviewState, calculateDday, REVIEW_STATE } from '../utils.js';
+import {
+  getReviewState,
+  calculateDday,
+  REVIEW_STATE,
+  updateReviewState,
+  calculateNextDate,
+} from '../utils.js';
 
 console.log('playlist_detail.js 실행');
 
@@ -196,8 +202,34 @@ modalCancelBtn.addEventListener('click', () => {
 });
 
 // 확인 버튼 클릭
-modalConfirmBtn.addEventListener('click', () => {
+modalConfirmBtn.addEventListener('click', async () => {
+  // 모달 닫기
   modal.classList.add('hidden');
+
+  // 복습 완료 로직 실행
+  const newReviewState = updateReviewState(data);
+  data.reviewState = newReviewState;
+
+  // storage에 반영
+  const result = await chrome.storage.local.get('playlists');
+  const playlists = result.playlists || {};
+  playlists[playlistId] = data;
+  await chrome.storage.local.set({ playlists: playlists });
+
+  // ui 업데이트
+  renderReviewState(data);
+
+  // 버튼 텍스트 잠시 변경하여 복습 완료 표시
+  const originalText = completedBtn.textContent;
+  completedBtn.textContent = '완료됨! 👍';
+  completedBtn.style.backgroundColor = 'var(--primary-color)';
+  completedBtn.style.color = 'white';
+
+  setTimeout(() => {
+    completedBtn.textContent = originalText;
+    completedBtn.style.backgroundColor = ''; // 스타일 초기화
+    completedBtn.style.color = '';
+  }, 2000);
 });
 
 // 배경 클릭 시 닫기
