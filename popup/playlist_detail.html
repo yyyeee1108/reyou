@@ -79,6 +79,20 @@
       </div>
     </template>
 
+    <!-- modal 영역 -->
+    <div id="completedModal" class="modal hidden">
+      <div class="modal-popup">
+        <h3 class="modal-title">복습 완료 처리하시겠습니까?</h3>
+        <p class="modal-desc">
+          오늘 학습 내용을 기록합니다.<br />
+          (주기가 아닐 경우 횟수만 증가)
+        </p>
+        <div class="modal-buttons">
+          <button id="modalCancelBtn" class="btn-cancel">취소</button>
+          <button id="modalConfirmBtn" class="btn-confirm">확인</button>
+        </div>
+      </div>
+    </div>
     <script src="./playlist_detail.js" type="module"></script>
   </body>
 </html>

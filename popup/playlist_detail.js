@@ -178,3 +178,31 @@ playButton.addEventListener('click', () => {
     }
   );
 });
+
+// 복습 완료 버튼 및 모달 처리
+const completedBtn = document.getElementById('completedBtn');
+const modal = document.getElementById('completedModal');
+const modalCancelBtn = document.getElementById('modalCancelBtn');
+const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+
+// 복습 완료 버튼 클릭
+completedBtn.addEventListener('click', () => {
+  modal.classList.remove('hidden');
+});
+
+// 취소 버튼 클릭
+modalCancelBtn.addEventListener('click', () => {
+  modal.classList.add('hidden');
+});
+
+// 확인 버튼 클릭
+modalConfirmBtn.addEventListener('click', () => {
+  modal.classList.add('hidden');
+});
+
+// 배경 클릭 시 닫기
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) {
+    modal.classList.add('hidden');
+  }
+});
