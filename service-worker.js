@@ -114,6 +114,7 @@ async function getPlaylistVideos(
       stage: 0,
       lastReviewDate: new Date().toISOString(),
       nextReviewDate: calculateNextDate(0),
+      reviewCount: 0,
       isCompleted: false,
     };
     const { playlists } = await chrome.storage.local.get('playlists');
