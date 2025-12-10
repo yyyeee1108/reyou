@@ -79,7 +79,7 @@ function updateUI(data, playlistContainer) {
     const title = clone.querySelector('.playlist-title');
     const channelName = clone.querySelector('.channel-name');
     const videoCount = clone.querySelector('.video-count');
-    const reviewbadge = clone.querySelector('.review-badge');
+    const reviewBadge = clone.querySelector('.review-badge');
     const ddayText = clone.querySelector('.dday-text');
 
     // 데이터 배치
@@ -95,8 +95,8 @@ function updateUI(data, playlistContainer) {
 
     switch (reviewState) {
       case REVIEW_STATE.STATUS_DUE:
-        reviewbadge.textContent = REVIEW_STATE.STATUS_DUE;
-        reviewbadge.classList.add('badge-due');
+        reviewBadge.textContent = REVIEW_STATE.STATUS_DUE;
+        reviewBadge.classList.add('badge-due');
         const dDayDue = calculateDday(item.reviewState.nextReviewDate);
         if (dDayDue < 0) {
           ddayText.textContent = `D+${Math.abs(dDayDue)}`;
@@ -106,21 +106,21 @@ function updateUI(data, playlistContainer) {
         break;
 
       case REVIEW_STATE.STATUS_NEW:
-        reviewbadge.textContent = REVIEW_STATE.STATUS_NEW;
-        reviewbadge.classList.add('badge-new');
+        reviewBadge.textContent = REVIEW_STATE.STATUS_NEW;
+        reviewBadge.classList.add('badge-new');
         ddayText.textContent = '';
         break;
 
       case REVIEW_STATE.STATUS_IN_PROGRESS:
-        reviewbadge.textContent = `${item.reviewState.stage}단계`;
-        reviewbadge.classList.add('badge-in-progress');
+        reviewBadge.textContent = `${item.reviewState.stage}단계`;
+        reviewBadge.classList.add('badge-in-progress');
         const dDayInProg = calculateDday(item.reviewState.nextReviewDate);
         ddayText.textContent = `D-${dDayInProg}`;
         break;
 
       case REVIEW_STATE.STATUS_COMPLETED:
-        reviewbadge.textContent = REVIEW_STATE.STATUS_COMPLETED;
-        reviewbadge.classList.add('badge-completed');
+        reviewBadge.textContent = REVIEW_STATE.STATUS_COMPLETED;
+        reviewBadge.classList.add('badge-completed');
         ddayText.textContent = '';
         break;
     }

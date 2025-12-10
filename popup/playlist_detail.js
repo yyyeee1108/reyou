@@ -1,3 +1,5 @@
+import { getReviewState, calculateDday, REVIEW_STATE } from '../utils.js';
+
 console.log('playlist_detail.js 실행');
 
 // DOM 요소 가져오기
@@ -67,6 +69,52 @@ videos.forEach((item, index) => {
   // 컨테이너에 추가
   videoListContainer.appendChild(clone);
 });
+
+renderReviewState(data);
+
+// 복습 상태 렌더링
+function renderReviewState(data) {
+  const reviewBadge = document.getElementById('detailBadge');
+  const ddayText = document.getElementById('detailDday');
+  const reviewCount = document.getElementById('detailReviewCount');
+
+  // 리뷰 뱃지, D-Day 텍스트 설정
+  const reviewState = getReviewState(data);
+  switch (reviewState) {
+    case REVIEW_STATE.STATUS_DUE:
+      reviewBadge.textContent = REVIEW_STATE.STATUS_DUE;
+      reviewBadge.classList.add('badge-due');
+      const dDayDue = calculateDday(item.reviewState.nextReviewDate);
+      if (dDayDue < 0) {
+        ddayText.textContent = `D+${Math.abs(dDayDue)}`;
+      } else {
+        ddayText.textContent = 'D-Day';
+      }
+      break;
+
+    case REVIEW_STATE.STATUS_NEW:
+      reviewBadge.textContent = REVIEW_STATE.STATUS_NEW;
+      reviewBadge.classList.add('badge-new');
+      ddayText.textContent = '';
+      break;
+
+    case REVIEW_STATE.STATUS_IN_PROGRESS:
+      reviewBadge.textContent = `${item.reviewState.stage}단계`;
+      reviewBadge.classList.add('badge-in-progress');
+      const dDayInProg = calculateDday(item.reviewState.nextReviewDate);
+      ddayText.textContent = `D-${dDayInProg}`;
+      break;
+
+    case REVIEW_STATE.STATUS_COMPLETED:
+      reviewBadge.textContent = REVIEW_STATE.STATUS_COMPLETED;
+      reviewBadge.classList.add('badge-completed');
+      ddayText.textContent = '';
+      break;
+  }
+
+  // 복습 횟수 설정
+  reviewCount.textContent = `${data.reviewState.reviewCount}회`;
+}
 
 async function getPlaylistData(playlistId) {
   const data = (await chrome.storage.local.get('playlists')).playlists[
