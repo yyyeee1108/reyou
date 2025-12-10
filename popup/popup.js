@@ -1,26 +1,63 @@
+import {
+  REVIEW_INTERVALS,
+  REVIEW_STATE,
+  getReviewState,
+  calculateDday,
+  calculateNextDate,
+} from '../utils.js';
+
 console.log('[ReYou] popup.js 실행');
 
+// 전역 변수
+let playlists = {}; // 모든 재생목록 저장
+let currentFilter = 'due';
+
 document.addEventListener('DOMContentLoaded', async () => {
-  await loadContent();
+  // local storage 데이터 로드
+  const storageData = await chrome.storage.local.get('playlists');
+  playlists = storageData.playlists || {};
+
+  // 렌더링
+  renderList();
+
+  // 버튼 이벤트
+  setFilterButtons();
 });
 
-async function loadContent() {
+function renderList() {
   // DOM 요소 가져오기
   const playlistContainer = document.getElementById('playlist-list-container');
 
-  // chrome.storage.local로부터 저장한 재생목록 데이터 받아오기
-  const data = (await chrome.storage.local.get('playlists')).playlists;
-  console.log('popup.js data:', data);
-
-  if (Object.keys(data).length === 0) {
+  if (Object.keys(playlists).length === 0) {
     document.querySelector('.msg').textContent = '저장한 재생목록이 없습니다';
     return;
   }
 
+  // 필터링
+  let filteredData = Object.values(playlists).filter((item) => {
+    const reviewState = getReviewState(item);
+    if (currentFilter === 'all') return true;
+    if (currentFilter === 'due') return reviewState === REVIEW_STATE.STATUS_DUE;
+    if (currentFilter === 'new') return reviewState === REVIEW_STATE.STATUS_NEW;
+    if (currentFilter === 'in-progress')
+      return reviewState === REVIEW_STATE.STATUS_IN_PROGRESS;
+    if (currentFilter === 'completed')
+      return reviewState === REVIEW_STATE.STATUS_COMPLETED;
+    return true;
+  });
+
+  // 정렬
+  filteredData.sort((a, b) => {
+    const dDayA = calculateDday(a.reviewState.nextReviewDate) ?? 999;
+    const dDayB = calculateDday(b.reviewState.nextReviewDate) ?? 999;
+    return dDayA - dDayB;
+  });
+
   // messsage를 빈 문구로 만들기
   playlistContainer.innerHTML = '';
-  // 저장한 재생목록 UI 업데이트
-  updateUI(data, playlistContainer);
+
+  // UI 업데이트
+  updateUI(filteredData, playlistContainer);
 }
 
 // 받아온 데이터로 팝업의 UI 업데이트
@@ -29,20 +66,21 @@ function updateUI(data, playlistContainer) {
   // template DOM 요소 가져오기
   const template = document.getElementById('playlist-card-template');
 
-  Object.entries(data).forEach(([id, item], index) => {
+  data.forEach((item, index) => {
     // template 복제
     const clone = document.importNode(template.content, true);
     console.log('clone: ', clone);
 
     // 재생목록 정보 요소 가져오기
     const playlistInfo = item.playlistInfo;
-    console.log('playlistInfo: ', playlistInfo);
     const card = clone.querySelector('.card');
     const cardIndex = clone.querySelector('.index');
     const thumbnail = clone.querySelector('.thumbnail-img');
     const title = clone.querySelector('.playlist-title');
     const channelName = clone.querySelector('.channel-name');
     const videoCount = clone.querySelector('.video-count');
+    const reviewbadge = clone.querySelector('.review-badge');
+    const ddayText = clone.querySelector('.dday-text');
 
     // 데이터 배치
     cardIndex.textContent = index + 1;
@@ -50,9 +88,42 @@ function updateUI(data, playlistContainer) {
     title.textContent = playlistInfo.title;
     channelName.textContent = playlistInfo.channelName;
     videoCount.textContent = `동영상 ${item.videos.length}개`;
+    card.dataset.id = item.playlistInfo.playlistId; // data-id(dataset)에 재생목록 ID 저장
 
-    // data-id(dataset)에 재생목록 ID 저장
-    card.dataset.id = item.playlistInfo.playlistId;
+    // 리뷰 상태 배치
+    const reviewState = getReviewState(item);
+
+    switch (reviewState) {
+      case REVIEW_STATE.STATUS_DUE:
+        reviewbadge.textContent = REVIEW_STATE.STATUS_DUE;
+        reviewbadge.classList.add('badge-due');
+        const dDayDue = calculateDday(item.reviewState.nextReviewDate);
+        if (dDayDue < 0) {
+          ddayText.textContent = `D+${Math.abs(dDayDue)}`;
+        } else {
+          ddayText.textContent = 'D-Day';
+        }
+        break;
+
+      case REVIEW_STATE.STATUS_NEW:
+        reviewbadge.textContent = REVIEW_STATE.STATUS_NEW;
+        reviewbadge.classList.add('badge-new');
+        ddayText.textContent = '';
+        break;
+
+      case REVIEW_STATE.STATUS_IN_PROGRESS:
+        reviewbadge.textContent = `${item.reviewState.stage}단계`;
+        reviewbadge.classList.add('badge-in-progress');
+        const dDayInProg = calculateDday(item.reviewState.nextReviewDate);
+        ddayText.textContent = `D-${dDayInProg}`;
+        break;
+
+      case REVIEW_STATE.STATUS_COMPLETED:
+        reviewbadge.textContent = REVIEW_STATE.STATUS_COMPLETED;
+        reviewbadge.classList.add('badge-completed');
+        ddayText.textContent = '';
+        break;
+    }
 
     // 항목 클릭 시 상세 페이지로 이동하는 이벤트
     card.addEventListener('click', () => {
@@ -61,5 +132,24 @@ function updateUI(data, playlistContainer) {
 
     // 컨테이너에 추가
     playlistContainer.appendChild(clone);
+  });
+}
+
+function setFilterButtons() {
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  filterButtons.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      // selected 클래스 제거
+      filterButtons.forEach((b) => b.classList.remove('selected'));
+
+      // 눌린 버튼에 selected 클래스 추가
+      btn.classList.add('selected');
+
+      // 현재의 필터 상태를 저장
+      currentFilter = e.currentTarget.dataset.filter;
+
+      // 리스트 다시 불러오기
+      renderList();
+    });
   });
 }
