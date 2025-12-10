@@ -170,8 +170,8 @@ body {
   width: 50px;
   height: 50px;
   position: absolute;
-  top: 13%;
-  right: 8%;
+  top: 11%;
+  right: 4.7%;
   border: none;
   border-radius: 50%;
   background-color: var(--primary-color);
@@ -195,6 +195,29 @@ body {
   width: 32px;
   height: 32px;
   pointer-events: none;
+}
+
+/* 복습 완료 버튼 */
+#completedBtn {
+  position: absolute;
+  top: 43%;
+  right: 4.3%;
+  background-color: white;
+  color: var(--primary-color);
+  border: 0.5px solid var(--primary-color);
+  border-radius: 15px;
+  font-weight: normal;
+  font-size: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s, background-color 0.2s;
+
+  cursor: pointer;
+}
+
+#completedBtn:hover {
+  transform: scale(1.1);
+  background-color: var(--primary-color);
+  color: white;
 }
 
 .video-title {

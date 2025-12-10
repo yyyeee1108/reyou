@@ -84,7 +84,7 @@ function renderReviewState(data) {
     case REVIEW_STATE.STATUS_DUE:
       reviewBadge.textContent = REVIEW_STATE.STATUS_DUE;
       reviewBadge.classList.add('badge-due');
-      const dDayDue = calculateDday(item.reviewState.nextReviewDate);
+      const dDayDue = calculateDday(data.reviewState.nextReviewDate);
       if (dDayDue < 0) {
         ddayText.textContent = `D+${Math.abs(dDayDue)}`;
       } else {
@@ -99,9 +99,9 @@ function renderReviewState(data) {
       break;
 
     case REVIEW_STATE.STATUS_IN_PROGRESS:
-      reviewBadge.textContent = `${item.reviewState.stage}단계`;
+      reviewBadge.textContent = `${data.reviewState.stage}단계`;
       reviewBadge.classList.add('badge-in-progress');
-      const dDayInProg = calculateDday(item.reviewState.nextReviewDate);
+      const dDayInProg = calculateDday(data.reviewState.nextReviewDate);
       ddayText.textContent = `D-${dDayInProg}`;
       break;
 
