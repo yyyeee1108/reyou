@@ -220,6 +220,13 @@ body {
   color: white;
 }
 
+/* 영상 영역 */
+#video-list-container {
+  border-radius: 15px;
+  border: 0.3px solid var(--text-lightgray);
+  padding: 2px 7px 2px 7px;
+}
+
 .video-title {
   font-size: 14px;
   margin: 0 0 8px 0;

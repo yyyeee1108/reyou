@@ -14,47 +14,49 @@
         <span class="page-title">재생목록 제목</span>
       </div>
     </header>
-    <div class="review-container">
-      <div class="review-status">
-        <span id="detailBadge" class="review-badge">시작 전</span>
-        <span id="detailDday" class="dday-text large">dday</span>
-      </div>
-      <div class="review-count">
-        <span class="text">총 복습</span>
-        <span id="detailReviewCount" class="count-value">0회</span>
-      </div>
-    </div>
-    <div class="playlist-total-container">
-      <div class="playlist-thumbnail-area">
-        <img
-          src="../assets/mock_image/mock_playlist_thumbnail_3.jpg"
-          alt="playlist thumbnail"
-          id="playlistThumbnail"
-        />
-      </div>
-      <div class="playlist-info-area">
-        <h3 id="playlistTitle">재생목록 제목</h3>
-        <div class="playlist-meta">
-          <p id="playlistChannelName">게시자: 채널명</p>
-          <p id="videoCnt">동영상 0개</p>
+    <div class="content">
+      <div class="review-container">
+        <div class="review-status">
+          <span id="detailBadge" class="review-badge">시작 전</span>
+          <span id="detailDday" class="dday-text large">dday</span>
+        </div>
+        <div class="review-count">
+          <span class="text">총 복습</span>
+          <span id="detailReviewCount" class="count-value">0회</span>
         </div>
       </div>
-      <button id="playBtn">
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="#ffffff"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M8 5V19L19 12L8 5Z" />
-        </svg>
-      </button>
-      <button id="completedBtn">복습 완료</button>
-    </div>
+      <div class="playlist-total-container">
+        <div class="playlist-thumbnail-area">
+          <img
+            src="../assets/mock_image/mock_playlist_thumbnail_3.jpg"
+            alt="playlist thumbnail"
+            id="playlistThumbnail"
+          />
+        </div>
+        <div class="playlist-info-area">
+          <h3 id="playlistTitle">재생목록 제목</h3>
+          <div class="playlist-meta">
+            <p id="playlistChannelName">게시자: 채널명</p>
+            <p id="videoCnt">동영상 0개</p>
+          </div>
+        </div>
+        <button id="playBtn">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="#ffffff"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M8 5V19L19 12L8 5Z" />
+          </svg>
+        </button>
+        <button id="completedBtn">복습 완료</button>
+      </div>
 
-    <div id="video-list-container">
-      <p class="msg">불러오는 중...</p>
+      <div id="video-list-container">
+        <p class="msg">불러오는 중...</p>
+      </div>
     </div>
 
     <!-- <template> 재사용 가능한 html 틀 -->

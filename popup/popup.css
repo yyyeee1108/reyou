@@ -34,6 +34,10 @@ body {
   color: #3e3e3e;
 }
 
+.content {
+  padding: 0 5px 0 5px;
+}
+
 .filter-container {
   width: 100%;
   display: flex;
@@ -70,13 +74,14 @@ body {
   flex-direction: row;
   align-items: flex-start;
   background-color: var(--card-bg);
-  border-radius: 8px;
+  border-radius: 15px;
   padding: 7px 7px 7px 4px;
   cursor: pointer;
 }
 
 .card:hover {
   background-color: var(--card-hover-bg);
+  transform: scale(1.04);
 }
 
 /* index */
