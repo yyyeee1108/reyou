@@ -3,6 +3,7 @@
   --card-height: 188px;
   --primary-color: #00d46a;
   --text-white: #ffffff;
+  --text-gray: #4d4d4d;
 }
 
 body {
@@ -147,4 +148,74 @@ body {
 #addPlaylistBtn:hover {
   transform: scale(1.1);
   transition: 0.2s;
+}
+
+/* modal 영역 */
+.modal {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+
+  opacity: 1;
+  transition: opacity 0.2s;
+}
+
+.modal.hidden {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.modal .modal-popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 240px;
+  padding: 24px 20px;
+  background: white;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.modal-title {
+  font-size: 1rem;
+  margin: 20px 0 20px 0;
+}
+.modal-desc {
+  font-size: 12px;
+  color: var(--text-gray);
+  font-weight: 300;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.modal-buttons button {
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+  padding: 5px;
+}
+
+.modal-buttons button:hover {
+  transform: scale(1.05);
+}
+
+#modalConfirmBtn {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+#modalCancelBtn {
+  color: var(--text-gray);
 }

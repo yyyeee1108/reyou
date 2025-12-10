@@ -42,6 +42,20 @@
 
     <button id="addPlaylistBtn">+</button>
 
+    <!-- modal 영역 -->
+    <div id="addModal" class="modal hidden">
+      <div class="modal-popup">
+        <h3 class="modal-title">재생목록을 추가하시겠습니까?</h3>
+        <p class="modal-desc">
+          복습할 재생목록으로 추가합니다.<br />
+          (중복일 경우 저장하지 않음)
+        </p>
+        <div class="modal-buttons">
+          <button id="modalCancelBtn" class="btn-cancel">취소</button>
+          <button id="modalConfirmBtn" class="btn-confirm">확인</button>
+        </div>
+      </div>
+    </div>
     <script type="module" src="add_playlist.js"></script>
   </body>
 </html>

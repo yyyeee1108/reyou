@@ -41,11 +41,35 @@ function updateUI(data) {
   videoViews.innerText = `조회수 ${data.videoViews}회`;
 }
 
-// 재생목록 추가 버튼 이벤트 -> 해당 재생목록 storage에 저장
+// 재생목록 추가 버튼 및 모달 처리
+const modal = document.getElementById('addModal');
+const modalCancelBtn = document.getElementById('modalCancelBtn');
+const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+
+// 추가 버튼 클릭
 addPlaylistBtn.addEventListener('click', () => {
+  modal.classList.remove('hidden');
+});
+
+// 취소 버튼 클릭
+modalCancelBtn.addEventListener('click', () => {
+  modal.classList.add('hidden');
+});
+
+// 확인 버튼 클릭
+modalConfirmBtn.addEventListener('click', () => {
+  modal.classList.add('hidden');
+  // 재생목록 추가 버튼 이벤트 -> 해당 재생목록 storage에 저장
   if (playlistId) {
     chrome.runtime.sendMessage({ type: 'PLAYLIST_ID', playlistId });
     console.log('재생목록 추가 버튼 클릭 - sendMessage 실행');
+  }
+});
+
+// 배경 클릭 시 닫기
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) {
+    modal.classList.add('hidden');
   }
 });
 
