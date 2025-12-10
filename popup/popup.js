@@ -14,8 +14,18 @@ let currentFilter = 'due';
 
 document.addEventListener('DOMContentLoaded', async () => {
   // local storage 데이터 로드
-  const storageData = await chrome.storage.local.get('playlists');
+  const storageData = await chrome.storage.local.get([
+    'playlists',
+    'lastFilter',
+  ]);
   playlists = storageData.playlists || {};
+
+  if (storageData.lastFilter) {
+    currentFilter = storageData.lastFilter;
+  }
+
+  // 필터 버튼 selected 렌더링
+  initFilterButtons();
 
   // 렌더링
   renderList();
@@ -23,6 +33,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 버튼 이벤트
   setFilterButtons();
 });
+
+function initFilterButtons() {
+  const buttons = document.querySelectorAll('.filter-btn');
+  buttons.forEach((btn) => {
+    // 현재 필터와 버튼의 data-filter가 일치하면 selected 추가
+    if (btn.dataset.filter === currentFilter) {
+      btn.classList.add('selected');
+    } else {
+      btn.classList.remove('selected');
+    }
+  });
+}
 
 function renderList() {
   // DOM 요소 가져오기
@@ -138,7 +160,7 @@ function updateUI(data, playlistContainer) {
 function setFilterButtons() {
   const filterButtons = document.querySelectorAll('.filter-btn');
   filterButtons.forEach((btn) => {
-    btn.addEventListener('click', (e) => {
+    btn.addEventListener('click', async (e) => {
       // selected 클래스 제거
       filterButtons.forEach((b) => b.classList.remove('selected'));
 
@@ -146,7 +168,11 @@ function setFilterButtons() {
       btn.classList.add('selected');
 
       // 현재의 필터 상태를 저장
-      currentFilter = e.currentTarget.dataset.filter;
+      const newFilter = e.currentTarget.dataset.filter;
+      currentFilter = newFilter;
+
+      // 변경된 필터 상태 storage에 저장
+      await chrome.storage.local.set({ lastFilter: newFilter });
 
       // 리스트 다시 불러오기
       renderList();
