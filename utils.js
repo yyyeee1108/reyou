@@ -12,6 +12,11 @@ export const REVIEW_STATE = {
  * @returns {string} nextDate - 다음 복습 날짜(ISO String)
  */
 export function calculateNextDate(stage) {
+  // 복습 완료의 경우 null 반환
+  if (stage === 6) {
+    return null;
+  }
+
   const interval = REVIEW_INTERVALS[stage];
 
   const nextDate = new Date(); // 현재 날짜 생성
@@ -71,4 +76,43 @@ export function getReviewState(playlist) {
 
   // 나머지는 D-Day 남아있는 학습 중 상태
   return REVIEW_STATE.STATUS_IN_PROGRESS;
+}
+
+/**
+ * 복습 완료 시 reviewState 데이터를 업데이트하는 함수
+ * @param {object} playlist - 업데이트할 재생목록 항목 데이터
+ * - 미리 복습하는 경우 (due status가 아닌 경우) 단계 유지, 복습 횟수만 증가
+ */
+export function updateReviewState(playlist) {
+  // 데이터 받아오기
+  const newReviewState = playlist.reviewState;
+
+  // 복습 횟수 변경
+  newReviewState.reviewCount = newReviewState.reviewCount + 1;
+
+  // 마지막 복습 날짜 변경
+  newReviewState.lastReviewDate = new Date().toISOString();
+
+  // 단계 변경
+  const currentReviewState = getReviewState(playlist);
+  if (
+    currentReviewState === REVIEW_STATE.STATUS_DUE ||
+    currentReviewState === REVIEW_STATE.STATUS_NEW
+  ) {
+    // 정상 복습 -> 단계 증가
+    const nextStage = newReviewState.stage + 1;
+    newReviewState.stage = nextStage;
+
+    // 다음 복습 날짜 계산
+    const nextReviewDate = calculateNextDate(nextStage);
+    newReviewState.nextReviewDate = nextReviewDate;
+
+    // 30일 차 복습의 경우 복습 완료 처리
+    if (!nextReviewDate) {
+      newReviewState.isCompleted = true;
+      newReviewState.nextReviewDate = null;
+    }
+  }
+
+  return newReviewState;
 }

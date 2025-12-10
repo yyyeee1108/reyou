@@ -1,4 +1,10 @@
-import { getReviewState, calculateDday, REVIEW_STATE } from '../utils.js';
+import {
+  getReviewState,
+  calculateDday,
+  REVIEW_STATE,
+  updateReviewState,
+  calculateNextDate,
+} from '../utils.js';
 
 console.log('playlist_detail.js 실행');
 
@@ -84,7 +90,7 @@ function renderReviewState(data) {
     case REVIEW_STATE.STATUS_DUE:
       reviewBadge.textContent = REVIEW_STATE.STATUS_DUE;
       reviewBadge.classList.add('badge-due');
-      const dDayDue = calculateDday(item.reviewState.nextReviewDate);
+      const dDayDue = calculateDday(data.reviewState.nextReviewDate);
       if (dDayDue < 0) {
         ddayText.textContent = `D+${Math.abs(dDayDue)}`;
       } else {
@@ -99,9 +105,9 @@ function renderReviewState(data) {
       break;
 
     case REVIEW_STATE.STATUS_IN_PROGRESS:
-      reviewBadge.textContent = `${item.reviewState.stage}단계`;
+      reviewBadge.textContent = `${data.reviewState.stage}단계`;
       reviewBadge.classList.add('badge-in-progress');
-      const dDayInProg = calculateDday(item.reviewState.nextReviewDate);
+      const dDayInProg = calculateDday(data.reviewState.nextReviewDate);
       ddayText.textContent = `D-${dDayInProg}`;
       break;
 
@@ -177,4 +183,58 @@ playButton.addEventListener('click', () => {
       }
     }
   );
+});
+
+// 복습 완료 버튼 및 모달 처리
+const completedBtn = document.getElementById('completedBtn');
+const modal = document.getElementById('completedModal');
+const modalCancelBtn = document.getElementById('modalCancelBtn');
+const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+
+// 복습 완료 버튼 클릭
+completedBtn.addEventListener('click', () => {
+  modal.classList.remove('hidden');
+});
+
+// 취소 버튼 클릭
+modalCancelBtn.addEventListener('click', () => {
+  modal.classList.add('hidden');
+});
+
+// 확인 버튼 클릭
+modalConfirmBtn.addEventListener('click', async () => {
+  // 모달 닫기
+  modal.classList.add('hidden');
+
+  // 복습 완료 로직 실행
+  const newReviewState = updateReviewState(data);
+  data.reviewState = newReviewState;
+
+  // storage에 반영
+  const result = await chrome.storage.local.get('playlists');
+  const playlists = result.playlists || {};
+  playlists[playlistId] = data;
+  await chrome.storage.local.set({ playlists: playlists });
+
+  // ui 업데이트
+  renderReviewState(data);
+
+  // 버튼 텍스트 잠시 변경하여 복습 완료 표시
+  const originalText = completedBtn.textContent;
+  completedBtn.textContent = '완료됨! 👍';
+  completedBtn.style.backgroundColor = 'var(--primary-color)';
+  completedBtn.style.color = 'white';
+
+  setTimeout(() => {
+    completedBtn.textContent = originalText;
+    completedBtn.style.backgroundColor = ''; // 스타일 초기화
+    completedBtn.style.color = '';
+  }, 2000);
+});
+
+// 배경 클릭 시 닫기
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) {
+    modal.classList.add('hidden');
+  }
 });
