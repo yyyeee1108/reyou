@@ -274,3 +274,25 @@ function showReviewNotification(count) {
   };
   chrome.notifications.create(options);
 }
+
+// 알림 클릭 시 실행되는 이벤트
+chrome.notifications.onClicked.addListener((notificationId) => {
+  // 알림창 닫기
+  chrome.notifications.clear(notificationId);
+
+  // popup.html을 대상으로 하는 url
+  const targetUrl = chrome.runtime.getURL('popup/popup.html');
+
+  // 탭이 이미 열려 있는지 확인
+  chrome.tabs.query({ url: targetUrl }, (tabs) => {
+    if (tabs.length > 0) {
+      // 이미 열려 있다면 열려있는 기존 탭 열기
+      const existingTab = tabs[0];
+      chrome.tabs.update(existingTab.id, { active: true });
+      chrome.windows.update(existingTab.windowId, { focused: true });
+    } else {
+      // 없다면 새 탭 생성
+      chrome.tabs.create({ url: targetUrl });
+    }
+  });
+});
