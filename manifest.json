@@ -11,7 +11,7 @@
     "type": "module"
   },
   "host_permissions": ["https://youtube.com/*", "https://www.youtube.com/*"],
-  "permissions": ["storage", "alarms", "tabs", "scripting"],
+  "permissions": ["storage", "alarms", "tabs", "scripting", "notifications"],
   "content_scripts": [
     {
       "matches": ["*://www.youtube.com/playlist*"],

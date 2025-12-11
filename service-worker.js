@@ -1,5 +1,5 @@
 import { API_KEY } from './config.js';
-import { calculateNextDate } from './utils.js';
+import { calculateNextDate, getReviewState, REVIEW_STATE } from './utils.js';
 
 console.log('[ReYou] service-worker.js 로드');
 
@@ -224,4 +224,53 @@ async function updatePopupUI(tabId, url) {
     });
     console.log(`[ReYou] Tab ${tabId}: 팝업 -> popup.html (기본) 설정됨`);
   }
+}
+
+// 알람 기능
+const ALARM_NAME = 'review-scheduler';
+
+// 알람 존재하는지 체크 후 다시 만들기
+async function createAlarm() {
+  const alarm = await chrome.alarms.get(ALARM_NAME);
+  if (typeof alarm === 'undefined') {
+    // 크롬 매번 시작할 때 체크해서 없으면 다시 만들기
+    chrome.alarms.create(ALARM_NAME, {
+      periodInMinutes: 60,
+    });
+    console.log('복습 스케줄러 시작');
+  }
+}
+
+createAlarm();
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === ALARM_NAME) {
+    checkDuePlaylists();
+  }
+});
+
+// due인 재생목록이 있는지 확인 후 알림
+async function checkDuePlaylists() {
+  const { playlists } = await chrome.storage.local.get('playlists');
+  let filteredData = Object.values(playlists).filter((item) => {
+    const reviewState = getReviewState(item);
+    return reviewState === REVIEW_STATE.STATUS_DUE;
+  });
+  console.log(`복습할 재생목록 ${filteredData.length}개`);
+
+  if (filteredData.length > 0) {
+    showReviewNotification(filteredData.length);
+  }
+}
+
+// 복습 알림 notification 띄움
+function showReviewNotification(count) {
+  let options = {
+    type: 'basic',
+    title: 'ReYou',
+    message: `복습할 재생목록이 ${count}개 있습니다`,
+    iconUrl: './assets/icons/button_play.png',
+    requireInteraction: true,
+  };
+  chrome.notifications.create(options);
 }
