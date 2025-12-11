@@ -2,7 +2,7 @@
 name: 기능 구현 (Feature)
 about: 새로운 기능을 추가할 때 사용합니다.
 title: ''
-labels: ''
+labels: enhancement
 assignees: ''
 
 ---
