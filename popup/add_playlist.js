@@ -37,8 +37,8 @@ function updateUI(data) {
   thumbnail.src = data.thumbnail;
   channelImg.src = data.channelImg;
   channelName.innerText = `게시자: ${data.channelName}`;
-  videoCnt.innerText = `동영상 ${data.videoCnt}개`;
-  videoViews.innerText = `조회수 ${data.videoViews}회`;
+  videoCnt.innerText = `동영상 ${formatNumberWithCommas(data.videoCnt)}개`;
+  videoViews.innerText = `조회수 ${formatNumberWithCommas(data.videoViews)}회`;
 }
 
 // 재생목록 추가 버튼 및 모달 처리
@@ -77,3 +77,11 @@ modal.addEventListener('click', (e) => {
 backBtn.addEventListener('click', () => {
   window.location.href = 'popup.html';
 });
+
+// 숫자 구분자 추가해주는 함수
+function formatNumberWithCommas(number) {
+  const cleanNumber = String(number).replace(/[^0-9]/g, '');
+
+  // 숫자로 변환 후, 로컬 포맷(콤마 추가)으로 변경
+  return Number(cleanNumber).toLocaleString();
+}
