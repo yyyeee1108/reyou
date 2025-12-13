@@ -27,25 +27,144 @@
   // 유튜브 재생목록 페이지(playlist?list=) 파싱하는 함수
   function parsePlaylistInfo() {
     try {
+      // ytInitialData 데이터 변수 추출
+      const jsonData = extractYtInitialData();
+
+      if (jsonData.metadata && jsonData.microformat && jsonData.sidebar) {
+        console.log('[ReYou] ytInitialData 추출 성공', jsonData);
+        return parseFromJson(jsonData);
+      }
+
+      // ytInitialData 실패 시 기존 파싱 형태로 진행
+      console.log('[ReYou] json 추출 실패. 기존 파싱 형태로 진행');
+      return parseFromDom();
+    } catch (e) {
+      console.error('[ReYou] 파싱 에러:', e);
+      return null;
+    }
+  }
+
+  // script에서 ytInitialData 변수 있는 것 꺼내기
+  function extractYtInitialData() {
+    try {
+      const scripts = document.querySelectorAll('script');
+      for (const script of scripts) {
+        if (script.textContent.includes('var ytInitialData =')) {
+          const content = script.textContent;
+          const startIndex = content.indexOf('{');
+          const endIndex = content.lastIndexOf('}');
+
+          if (startIndex !== -1 && endIndex !== -1) {
+            return JSON.parse(content.substring(startIndex, endIndex + 1));
+          }
+        }
+      }
+    } catch (e) {
+      console.error('[ReYou] ytInitialData 추출 실패', e);
+    }
+    return null;
+  }
+
+  function parseFromJson(data) {
+    const metadata = data.metadata.playlistMetadataRenderer;
+    const microformat = data.microformat.microformatDataRenderer;
+    const sidebar = data.sidebar.playlistSidebarRenderer.items;
+
+    // 재생목록 ID
+    const playlistId = new URL(location.href).searchParams.get('list');
+
+    // 썸네일 파싱
+    const thumbnails = microformat.thumbnail.thumbnails;
+    const thumbnail = thumbnails[thumbnails.length - 1]?.url;
+
+    // 재생목록 제목
+    const title = metadata?.title || microformat.title;
+
+    // 재생목록 작성자 제목, 프로필 이미지
+    const secondaryInfo = sidebar.find(
+      (item) => item.playlistSidebarSecondaryInfoRenderer
+    )?.playlistSidebarSecondaryInfoRenderer;
+    const videoOwner = secondaryInfo.videoOwner.videoOwnerRenderer;
+    const channelImg = videoOwner.thumbnail.thumbnails[0]?.url;
+    const channelName = videoOwner.title.runs[0]?.text;
+
+    // 재생목록 비디오 개수
+    let videoCnt = '0';
+    let videoViews = '0';
+
+    const primaryInfo = sidebar.find(
+      (item) => item.playlistSidebarPrimaryInfoRenderer
+    )?.playlistSidebarPrimaryInfoRenderer;
+
+    if (primaryInfo) {
+      const stats = primaryInfo.stats;
+
+      const videoCntText = stats[0]?.runs?.find((item) => {
+        return /\d/.test(item.text);
+      })?.text;
+      if (videoCntText) {
+        videoCnt = videoCntText.replace(/[^0-9]/g, '');
+      }
+
+      const videoViewsText = stats[1]?.simpleText?.replace(/[^0-9]/g, '');
+      if (videoViewsText) {
+        videoViews = videoViewsText.replace(/[^0-9]/g, '');
+      }
+    }
+
+    return {
+      playlistId,
+      title,
+      thumbnail,
+      channelName,
+      channelImg,
+      videoCnt,
+      videoViews,
+    };
+  }
+
+  function parseFromDom() {
+    try {
+      // 재생목록 ID
+      const playlistId = new URL(location.href).searchParams.get('list');
+
       // 썸네일 파싱
-      const thumbnail = document.querySelector(
-        'yt-content-preview-image-view-model > img.ytCoreImageLoaded'
-      ).src;
+      const ogImage = document
+        .querySelector('meta[property="og:image"]')
+        ?.getAttribute('content');
+
+      const thumbnail = ogImage.includes('youtube')
+        ? document.querySelector(
+            'yt-content-preview-image-view-model > img.ytCoreImageLoaded'
+          ).src
+        : ogImage;
 
       // 재생목록 제목
-      const title = document
-        .querySelector('head > title')
-        .textContent.slice(0, -10);
+      const title =
+        document
+          .querySelector('meta[property="og:title"]')
+          ?.getAttribute('content') ||
+        document
+          .querySelector('head > title')
+          .textContent.replace(' - YouTube', '');
 
       // 재생목록 작성자 프로필 이미지
-      const channelImg = document.querySelector(
-        'avatar-view-model img.ytCoreImageLoaded'
-      ).src;
+      const channelImg =
+        document.querySelector('avatar-view-model img.ytCoreImageLoaded')
+          ?.src || '';
 
       // 재생목록 작성자 이름
-      const channelName = document
-        .querySelector('yt-avatar-stack-view-model a')
-        .textContent.slice(5);
+      let channelName = '';
+      const channelNameElement =
+        document.querySelector('ytd-channel-name#channel-name a') ||
+        document.querySelector('yt-avatar-stack-view-model a');
+
+      if (channelNameElement) {
+        const channelNameText = channelNameElement.textContent.trim();
+        channelName = channelNameText.includes(':')
+          ? channelNameText.split(':').pop().trim()
+          : channelNameText;
+      }
 
       // 재생목록 비디오 개수
       const videoCnt = document
@@ -60,9 +179,6 @@
           'yt-content-metadata-view-model > div:nth-child(2) > span:nth-child(5)'
         )
         .textContent.replace(/\D/g, '');
-
-      // 재생목록 ID
-      const playlistId = new URL(location.href).searchParams.get('list');
 
       return {
         playlistId,
