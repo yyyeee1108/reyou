@@ -36,11 +36,20 @@ export function calculateDday(targetDateStr) {
   const targetDate = new Date(targetDateStr); // 다음 복습 날짜
   const currentDate = new Date(); // 현재 날짜
 
-  // 날짜만 비교하도록 hours, min, sec, ms는 0으로 초기화
-  currentDate.setHours(0, 0, 0, 0);
-  targetDate.setHours(0, 0, 0, 0);
+  // 다음 복습 날짜와 현재 날짜의 연/월/일 정보를 사용자의 로컬 시간대를 따르게 하여 저장
+  const targetDateLocal = new Date(
+    targetDate.getFullYear(),
+    targetDate.getMonth(),
+    targetDate.getDate()
+  );
 
-  const difference = targetDate - currentDate;
+  const currentDateLocal = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    currentDate.getDate()
+  );
+
+  const difference = targetDateLocal - currentDateLocal;
   const dDay = Math.floor(difference / (1000 * 60 * 60 * 24));
 
   console.log(`D-Day: ${dDay}`);
