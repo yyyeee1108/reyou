@@ -238,3 +238,40 @@ modal.addEventListener('click', (e) => {
     modal.classList.add('hidden');
   }
 });
+
+// 동영상 카드 클릭 및 모달 처리
+const videoCards = document.querySelectorAll('.card');
+const videoPlayModal = document.getElementById('videoPlayModal');
+const videoPlayCancelBtn = document.getElementById('videoPlayCancelBtn');
+const videoPlayConfirmBtn = document.getElementById('videoPlayConfirmBtn');
+
+let targetVideoUrl = ''; // 클릭한 영상의 URL
+
+// 동영상 카드 클릭
+videoCards.forEach((item) => {
+  item.addEventListener('click', () => {
+    videoPlayModal.classList.remove('hidden');
+    targetVideoUrl = `https://www.youtube.com/watch?v=${item.dataset.id}`;
+  });
+});
+
+// 취소 버튼 클릭
+videoPlayCancelBtn.addEventListener('click', () => {
+  videoPlayModal.classList.add('hidden');
+});
+
+// 확인 버튼 클릭
+videoPlayConfirmBtn.addEventListener('click', async () => {
+  // 모달 닫기
+  videoPlayModal.classList.add('hidden');
+
+  // 동영상 재생 로직 실행
+  chrome.tabs.create({ url: targetVideoUrl });
+});
+
+// 배경 클릭 시 닫기
+videoPlayModal.addEventListener('click', (e) => {
+  if (e.target === videoPlayModal) {
+    videoPlayModal.classList.add('hidden');
+  }
+});

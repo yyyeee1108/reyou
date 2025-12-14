@@ -297,11 +297,11 @@ body {
   transform: scale(1.05);
 }
 
-#modalConfirmBtn {
+.btn-confirm {
   background-color: var(--primary-color);
   color: white;
 }
 
-#modalCancelBtn {
+.btn-cancel {
   color: var(--text-gray);
 }
