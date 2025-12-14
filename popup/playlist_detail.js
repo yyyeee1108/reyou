@@ -84,6 +84,14 @@ function renderReviewState(data) {
   const ddayText = document.getElementById('detailDday');
   const reviewCount = document.getElementById('detailReviewCount');
 
+  // 새로운 상태 적용 전, 기존에 붙어있을 수 있는 뱃지 색상 관련 클래스 제거
+  reviewBadge.classList.remove(
+    'badge-due',
+    'badge-new',
+    'badge-in-progress',
+    'badge-completed'
+  );
+
   // 리뷰 뱃지, D-Day 텍스트 설정
   const reviewState = getReviewState(data);
   switch (reviewState) {
