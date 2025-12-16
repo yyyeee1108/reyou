@@ -1,9 +1,5 @@
 :root {
-  --popup-width: 336px;
   --card-height: 188px;
-  --primary-color: #00d46a;
-  --text-white: #ffffff;
-  --text-gray: #4d4d4d;
 }
 
 body {
@@ -32,6 +28,7 @@ body {
   opacity: 0.2;
   font-size: 20px;
   cursor: pointer;
+  color: var(--text-primary);
 
   display: flex;
   justify-content: center;
@@ -40,7 +37,7 @@ body {
 }
 
 .back-btn:hover {
-  background-color: #e8e8e8;
+  background-color: var(--card-hover-bg);
 }
 
 .page-title {
@@ -51,7 +48,7 @@ body {
 
   font-weight: 300;
   font-size: 14px;
-  color: #3e3e3e;
+  color: var(--text-primary);
 }
 
 /* 재생목록 카드 */
@@ -181,18 +178,21 @@ body {
   border-radius: 15px;
   text-align: center;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  background-color: var(--bg-color);
 }
 
 .modal-title {
   font-size: 1rem;
   margin: 20px 0 20px 0;
+  color: var(--text-primary);
 }
 .modal-desc {
   font-size: 12px;
-  color: var(--text-gray);
+  color: var(--text-secondary);
   font-weight: 300;
   margin-bottom: 20px;
   line-height: 1.4;
+  color: var(--text-secondary);
 }
 .modal-buttons {
   display: flex;
@@ -217,5 +217,5 @@ body {
 }
 
 #modalCancelBtn {
-  color: var(--text-gray);
+  color: var(--text-secondary);
 }
