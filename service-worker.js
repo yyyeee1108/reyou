@@ -23,8 +23,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     let playlistId = message.playlistId;
     console.log(`[ReYou] 재생목록 ID 수신: ${playlistId}`);
 
-    getPlaylistVideos(playlistId).then(() => {
-      sendResponse({ status: 'ok' });
+    getPlaylistVideos(playlistId).then((result) => {
+      if (result === 'DUPLICATED') {
+        sendResponse({ status: 'ok', detail: 'duplicatedId' });
+      } else {
+        sendResponse({ status: 'ok', detail: 'success' });
+      }
     });
     return true;
   }
@@ -53,7 +57,7 @@ async function getPlaylistVideos(
   // 이미 저장된 재생목록 ID일 경우 실행 중단
   if (await isDupllicatePlaylistId(playlistId)) {
     console.log(`[ReYou] playlistId 중복 확인함. getPlaylistVideos 실행 중단`);
-    return;
+    return 'DUPLICATED';
   }
 
   let url = `${PLAYLIST_ITEMS_URL}&key=${API_KEY}&playlistId=${playlistId}`;

@@ -45,6 +45,8 @@ function updateUI(data) {
 const modal = document.getElementById('addModal');
 const modalCancelBtn = document.getElementById('modalCancelBtn');
 const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+const modalTitle = document.querySelector('.modal-title');
+const modalDesc = document.querySelector('.modal-desc');
 
 // 추가 버튼 클릭
 addPlaylistBtn.addEventListener('click', () => {
@@ -58,11 +60,41 @@ modalCancelBtn.addEventListener('click', () => {
 
 // 확인 버튼 클릭
 modalConfirmBtn.addEventListener('click', () => {
-  modal.classList.add('hidden');
-  // 재생목록 추가 버튼 이벤트 -> 해당 재생목록 storage에 저장
+  // 저장 중 UI 피드백
+  modalConfirmBtn.disabled = true;
+  modalTitle.textContent = '저장 중...';
+  modalDesc.textContent = '저장 중입니다. 잠시 기다려주십시오.';
+
+  // 해당 재생목록 storage에 저장
   if (playlistId) {
-    chrome.runtime.sendMessage({ type: 'PLAYLIST_ID', playlistId });
-    console.log('재생목록 추가 버튼 클릭 - sendMessage 실행');
+    chrome.runtime
+      .sendMessage({ type: 'PLAYLIST_ID', playlistId })
+      .then((response) => {
+        if (response.status === 'ok' && response.detail === 'success') {
+          console.log('재생목록 추가 성공');
+          modalTitle.textContent = '재생목록 추가 성공';
+          modalDesc.textContent =
+            "추가한 재생목록은 홈 화면의 '시작 전' 탭에서 확인하실 수 있습니다.";
+          setTimeout(() => {
+            modal.classList.add('hidden');
+            chrome.storage.local.set({ lastFilter: 'new' });
+            window.location.href = 'popup.html';
+          }, 3000);
+        } else if (
+          response.status === 'ok' &&
+          response.detail === 'duplicatedId'
+        ) {
+          console.log('중복된 재생목록. 저장하지 않음');
+          modalTitle.textContent = '이미 저장된 재생목록입니다';
+          modalDesc.textContent = '';
+          setTimeout(() => {
+            modal.classList.add('hidden');
+          }, 3500);
+        } else {
+          console.log('재생목록 저장 실패');
+          modal.classList.add('hidden');
+        }
+      });
   }
 });
 
