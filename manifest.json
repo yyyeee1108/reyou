@@ -10,8 +10,18 @@
     "service_worker": "service-worker.js",
     "type": "module"
   },
+  "side_panel": {
+    "default_path": "popup/popup.html"
+  },
   "host_permissions": ["https://youtube.com/*", "https://www.youtube.com/*"],
-  "permissions": ["storage", "alarms", "tabs", "scripting", "notifications"],
+  "permissions": [
+    "storage",
+    "alarms",
+    "tabs",
+    "scripting",
+    "notifications",
+    "sidePanel"
+  ],
   "content_scripts": [
     {
       "matches": ["*://www.youtube.com/playlist*"],

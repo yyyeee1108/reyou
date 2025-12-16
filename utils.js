@@ -188,3 +188,31 @@ export async function initTheme(toggleId = 'darkModeToggle') {
     });
   }
 }
+
+/**
+ * 사이드 패널 조작 함수
+ * @param {string} buttonId - 사이드 패널 id (기본값: 'openSidePanelBtn')
+ */
+export function controlSidePanel(buttonId = 'openSidePanelBtn') {
+  // 사이드 패널 버튼
+  const openSidePanelBtn = document.getElementById(buttonId);
+
+  // 버튼이 존재하면 이벤트 연결
+  if (openSidePanelBtn) {
+    openSidePanelBtn.addEventListener('click', async () => {
+      // 현재 활성화된 탭 정보 가져오기
+      const [tab] = await chrome.tabs.query({
+        active: true,
+        currentWindow: true,
+      });
+
+      if (tab) {
+        // 사이드 패널 열기 (Chrome 114+ API)
+        await chrome.sidePanel.open({ tabId: tab.id });
+
+        // 팝업창 닫기
+        window.close();
+      }
+    });
+  }
+}

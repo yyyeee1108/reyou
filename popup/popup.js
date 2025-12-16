@@ -5,6 +5,7 @@ import {
   calculateDday,
   calculateNextDate,
   initTheme,
+  controlSidePanel,
 } from '../utils.js';
 
 console.log('[ReYou] popup.js 실행');
@@ -34,7 +35,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 버튼 이벤트
   setFilterButtons();
 
+  // 테마 적용
   await initTheme();
+
+  // 사이드 패널 조작
+  controlSidePanel();
 });
 
 function initFilterButtons() {
