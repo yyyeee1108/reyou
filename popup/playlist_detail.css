@@ -1,10 +1,4 @@
 :root {
-  --bg-color: #ffffff;
-  --card-bg-b: #000000;
-  --card-hover-bg-b: #4d4d4d;
-  --text-white: #fff;
-  --text-lightgray: #c9c9c9;
-  --primary-color: #00d46a;
   --playlist-height: 188px;
 }
 
@@ -26,6 +20,7 @@ body {
   width: 30px;
   height: 30px;
   border: none;
+  color: var(--text-primary);
   background-color: transparent;
   opacity: 0.2;
   font-size: 20px;
@@ -49,7 +44,7 @@ body {
 
   font-weight: 300;
   font-size: 14px;
-  color: var(--text-black);
+  color: var(--text-primary);
 
   white-space: nowrap;
   overflow: hidden;
@@ -69,7 +64,7 @@ body {
   padding: 5px 10px;
   margin: 10px 0;
   border-radius: 15px;
-  border: 1px solid #eee;
+  border: 1px solid var(--border-color);
 }
 
 .review-status {
@@ -81,7 +76,7 @@ body {
 .dday-text.large {
   font-size: 14px;
   font-weight: bold;
-  color: var(--text-gray);
+  color: var(--text-secondary);
 }
 .dday-text.large.due {
   color: #ff5722;
@@ -95,13 +90,13 @@ body {
 
 .review-count .text {
   font-size: 10px;
-  color: #888;
+  color: var(--text-primary);
 }
 
 .review-count .count-value {
   font-size: 13px;
   font-weight: 700;
-  color: var(--text-black);
+  color: var(--text-primary);
 }
 
 /* 재생목록 썸네일 영역 */
@@ -163,6 +158,7 @@ body {
   justify-content: space-between;
   align-items: center;
   font-size: 12px;
+  color: var(--text-primary);
 }
 
 /* 재생 버튼 */
@@ -223,14 +219,14 @@ body {
 /* 영상 영역 */
 #video-list-container {
   border-radius: 15px;
-  border: 0.3px solid var(--text-lightgray);
+  border: 0.3px solid var(--border-color);
   padding: 2px 7px 2px 7px;
 }
 
 .video-title {
   font-size: 14px;
   margin: 0 0 8px 0;
-  color: var(--text-black);
+  color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -263,19 +259,20 @@ body {
   transform: translate(-50%, -50%);
   width: 240px;
   padding: 24px 20px;
-  background: white;
+  background: var(--bg-color);
   border-radius: 15px;
   text-align: center;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .modal-title {
+  color: var(--text-primary);
   font-size: 1rem;
   margin: 20px 0 20px 0;
 }
 .modal-desc {
   font-size: 12px;
-  color: var(--text-gray);
+  color: var(--text-secondary);
   font-weight: 300;
   margin-bottom: 20px;
   line-height: 1.4;
@@ -303,5 +300,5 @@ body {
 }
 
 .btn-cancel {
-  color: var(--text-gray);
+  color: var(--text-secondary);
 }

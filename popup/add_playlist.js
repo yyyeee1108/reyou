@@ -1,4 +1,7 @@
+import { initTheme } from '../utils.js';
 console.log('[ReYou] add_playlist.js 실행');
+
+initTheme();
 
 // DOM 요소 가져오기
 const title = document.getElementById('playlistTitle');

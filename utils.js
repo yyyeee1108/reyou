@@ -125,3 +125,66 @@ export function updateReviewState(playlist) {
 
   return newReviewState;
 }
+
+/**
+ * 다크모드 초기화 및 토글 이벤트 연결 함수
+ * @param {string} toggleId - 토글 스위치 input 요소의 ID (기본값: 'darkModeToggle')
+ */
+export async function initTheme(toggleId = 'darkModeToggle') {
+  const toggleBtn = document.getElementById(toggleId);
+  const body = document.body;
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+  // 저장된 테마 불러오기
+  const { theme } = await chrome.storage.local.get('theme');
+
+  // 저장된 테마 없을 경우 -> 사용자 설정 따름
+  if (!theme) {
+    const isSystemDark = window.matchMedia(
+      '(prefers-color-scheme: dark)'
+    ).matches;
+    theme = isSystemDark ? 'dark' : 'light';
+
+    // 시스템 설정을 초기값으로 저장
+    await chrome.storage.local.set({ theme });
+  }
+
+  // 테마 UI 적용
+  if (theme === 'dark') {
+    body.setAttribute('data-theme', 'dark');
+    if (toggleBtn) toggleBtn.checked = true;
+  } else {
+    body.removeAttribute('data-theme');
+    if (toggleBtn) toggleBtn.checked = false;
+  }
+
+  // 시스템 테마 환경에 따라 테마 자동적용
+  mediaQuery.addEventListener('change', async (e) => {
+    const { theme } = await chrome.storage.local.get('theme');
+
+    if (e.matches && theme === 'light') {
+      body.setAttribute('data-theme', 'dark');
+      if (toggleBtn) toggleBtn.checked = true;
+      await chrome.storage.local.set({ theme: 'dark' });
+    } else if (!e.matches && theme === 'dark') {
+      body.removeAttribute('data-theme');
+      if (toggleBtn) toggleBtn.checked = false;
+      await chrome.storage.local.set({ theme: 'light' });
+    }
+  });
+
+  // 토글 버튼이 페이지에 있는 경우 버튼에 이벤트 리스너 등록
+  if (toggleBtn) {
+    toggleBtn.addEventListener('change', async (e) => {
+      if (e.target.checked) {
+        // 다크모드 켜기
+        body.setAttribute('data-theme', 'dark');
+        await chrome.storage.local.set({ theme: 'dark' });
+      } else {
+        // 다크모드 끄기
+        body.removeAttribute('data-theme');
+        await chrome.storage.local.set({ theme: 'light' });
+      }
+    });
+  }
+}

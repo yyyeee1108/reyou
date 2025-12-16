@@ -4,9 +4,12 @@ import {
   REVIEW_STATE,
   updateReviewState,
   calculateNextDate,
+  initTheme,
 } from '../utils.js';
 
 console.log('playlist_detail.js 실행');
+
+initTheme();
 
 // DOM 요소 가져오기
 const backBtn = document.getElementById('backBtn');

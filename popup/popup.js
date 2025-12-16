@@ -4,6 +4,7 @@ import {
   getReviewState,
   calculateDday,
   calculateNextDate,
+  initTheme,
 } from '../utils.js';
 
 console.log('[ReYou] popup.js 실행');
@@ -32,6 +33,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 버튼 이벤트
   setFilterButtons();
+
+  await initTheme();
 });
 
 function initFilterButtons() {
