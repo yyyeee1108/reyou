@@ -278,3 +278,12 @@ input:checked + .slider:before {
 .icon-btn:hover {
   background-color: var(--card-hover-bg);
 }
+
+.hidden {
+  display: none !important;
+}
+
+#addPlaylistPageBtn {
+  color: var(--text-secondary);
+  left: 35px;
+}

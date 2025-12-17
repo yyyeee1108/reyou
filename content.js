@@ -13,56 +13,84 @@
     if (request.type === 'GET_PARSE_PLAYLIST_INFO') {
       console.log('[ReYou] 팝업에서 재생목록 정보 요청 받음');
 
-      try {
-        const info = parsePlaylistInfo();
-        sendResponse(info);
-      } catch (error) {
-        console.error('[ReYou] 파싱 실패:', error);
-        sendResponse({ error: '파싱 실패' });
-      }
+      (async () => {
+        try {
+          const info = await parsePlaylistInfo();
+          sendResponse(info);
+        } catch (error) {
+          console.error('[ReYou] 파싱 실패:', error);
+          sendResponse({ error: '파싱 실패' });
+        }
+      })();
     }
     return true;
   });
 
   // 유튜브 재생목록 페이지(playlist?list=) 파싱하는 함수
-  function parsePlaylistInfo() {
+  async function parsePlaylistInfo() {
     try {
       // ytInitialData 데이터 변수 추출
-      const jsonData = extractYtInitialData();
+      const jsonData = await fetchCurrentPlaylistData();
+      console.log('jsonData: ', jsonData);
 
       if (jsonData.metadata && jsonData.microformat && jsonData.sidebar) {
         console.log('[ReYou] ytInitialData 추출 성공', jsonData);
         return parseFromJson(jsonData);
       }
 
+      console.log('[ReYou] 유효한 ytInitialData 없음. DOM 파싱 진행');
       // ytInitialData 실패 시 기존 파싱 형태로 진행
-      console.log('[ReYou] json 추출 실패. 기존 파싱 형태로 진행');
       return parseFromDom();
     } catch (e) {
       console.error('[ReYou] 파싱 에러:', e);
-      return null;
+      return parseFromDom();
     }
   }
 
-  // script에서 ytInitialData 변수 있는 것 꺼내기
-  function extractYtInitialData() {
+  // 현재 재생목록 페이지 새 요청 넣고 ytInitialData 변수 얻기
+  async function fetchCurrentPlaylistData() {
+    console.log('fetchCurrentPlaylistData 실행');
     try {
-      const scripts = document.querySelectorAll('script');
-      for (const script of scripts) {
-        if (script.textContent.includes('var ytInitialData =')) {
-          const content = script.textContent;
-          const startIndex = content.indexOf('{');
-          const endIndex = content.lastIndexOf('}');
+      const response = await fetch(window.location.href);
+      const html = await response.text();
 
-          if (startIndex !== -1 && endIndex !== -1) {
-            return JSON.parse(content.substring(startIndex, endIndex + 1));
-          }
+      const varText = 'var ytInitialData = ';
+      const startIndex = html.indexOf(varText);
+
+      if (startIndex === -1) {
+        return null;
+      }
+
+      let braceCount = 0;
+      let endIndex = -1;
+      let foundStart = false;
+
+      for (let i = startIndex + varText.length; i < html.length; i++) {
+        const char = html[i];
+        if (char === '{') {
+          braceCount++;
+          foundStart = true;
+        } else if (char === '}') {
+          braceCount--;
+        }
+
+        // 시작했고, 중괄호 짝이 다 맞으면 종료
+        if (foundStart && braceCount === 0) {
+          endIndex = i;
+          break;
         }
       }
-    } catch (e) {
-      console.error('[ReYou] ytInitialData 추출 실패', e);
-    }
-    return null;
+
+      if (endIndex !== -1) {
+        const jsonStr = html.substring(
+          startIndex + varText.length,
+          endIndex + 1
+        );
+        return JSON.parse(jsonStr);
+      }
+
+      return null;
+    } catch (e) {}
   }
 
   function parseFromJson(data) {
