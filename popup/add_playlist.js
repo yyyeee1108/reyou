@@ -28,7 +28,7 @@ chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
     activeTabId,
     { type: 'GET_PARSE_PLAYLIST_INFO' },
     (response) => {
-      console.log(response);
+      console.log('GET_PARSE_PLAYLIST_INFO response:', response);
       updateUI(response);
     }
   );

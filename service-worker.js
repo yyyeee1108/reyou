@@ -219,14 +219,28 @@ async function updatePopupUI(tabId, url) {
       tabId: tabId,
       popup: 'popup/add_playlist.html',
     });
-    console.log(`[ReYou] Tab ${tabId}: 팝업 -> add_playlist.html 설정됨`);
+
+    await chrome.sidePanel.setOptions({
+      tabId,
+      path: `popup/add_playlist.html?t=${Date.now()}`,
+      enabled: true,
+    });
+
+    console.log(`[ReYou] Tab ${tabId}: 팝업, 패널 -> add_playlist.html 설정됨`);
   } else {
     // 조건 불일치: 기본 홈 화면으로 원상복구
     await chrome.action.setPopup({
       tabId: tabId,
       popup: 'popup/popup.html',
     });
-    console.log(`[ReYou] Tab ${tabId}: 팝업 -> popup.html (기본) 설정됨`);
+
+    await chrome.sidePanel.setOptions({
+      tabId,
+      path: 'popup/popup.html',
+      enabled: true,
+    });
+
+    console.log(`[ReYou] Tab ${tabId}: 팝업, 패널 -> popup.html (기본) 설정됨`);
   }
 }
 

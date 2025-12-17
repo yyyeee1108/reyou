@@ -5,6 +5,7 @@ import {
   calculateDday,
   calculateNextDate,
   initTheme,
+  controlSidePanel,
 } from '../utils.js';
 
 console.log('[ReYou] popup.js 실행');
@@ -28,13 +29,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 필터 버튼 selected 렌더링
   initFilterButtons();
 
+  // 현재 탭이 재생목록 페이지일 경우 재생목록 페이지로 이동 버튼 표시
+  checkPlaylistPage();
+
   // 렌더링
   renderList();
 
   // 버튼 이벤트
   setFilterButtons();
 
+  // 테마 적용
   await initTheme();
+
+  // 사이드 패널 조작
+  controlSidePanel();
 });
 
 function initFilterButtons() {
@@ -181,4 +189,27 @@ function setFilterButtons() {
       renderList();
     });
   });
+}
+
+async function checkPlaylistPage() {
+  const addPlaylistPageBtn = document.getElementById('addPlaylistPageBtn');
+  if (!addPlaylistPageBtn) return;
+
+  // 현재 탭 정보 가져오기
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+  if (tab && tab.url) {
+    // URL이 유튜브 재생목록인지 검사
+    const isPlaylistPage =
+      tab.url.includes('youtube.com/playlist') && tab.url.includes('list=');
+
+    if (isPlaylistPage) {
+      addPlaylistPageBtn.classList.remove('hidden');
+
+      // 클릭 이벤트
+      addPlaylistPageBtn.addEventListener('click', () => {
+        window.location.href = `add_playlist.html?t=${Date.now()}`;
+      });
+    }
+  }
 }
