@@ -143,10 +143,10 @@ export async function initTheme(toggleId = 'darkModeToggle') {
     const isSystemDark = window.matchMedia(
       '(prefers-color-scheme: dark)'
     ).matches;
-    theme = isSystemDark ? 'dark' : 'light';
+    const systemTheme = isSystemDark ? 'dark' : 'light';
 
     // 시스템 설정을 초기값으로 저장
-    await chrome.storage.local.set({ theme });
+    await chrome.storage.local.set({ theme: systemTheme });
   }
 
   // 테마 UI 적용
