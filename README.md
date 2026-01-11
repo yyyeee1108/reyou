@@ -43,20 +43,14 @@
 
 이 프로젝트는 현재 개발 중입니다.
 
-[ ] 확장 프로그램 스토어에 게시
+- [ ] 확장 프로그램 스토어에 게시
 
-[ ] 유튜브 재생목록 동기화 기능 완성
+- [ ] 유튜브 재생목록 동기화 기능 완성
 
-[ ] 에빙하우스 알고리즘 기반 알림 팝업 구현
+- [ ] 에빙하우스 알고리즘 기반 알림 팝업 구현
 
-[ ] Phase 2: 백엔드 서버 구축(Java&Spring&RDB전환) 및 Redis를 활용한 캐싱 최적화
+- [ ] Phase 2: 백엔드 서버 구축(Java&Spring&RDB전환) 및 Redis를 활용한 캐싱 최적화
 
-[ ] Phase 3: React Native를 활용한 모바일 앱 연동 및 푸시 알림 서비스 확장
+- [ ] Phase 3: React Native를 활용한 모바일 앱 연동 및 푸시 알림 서비스 확장
 
-[ ] Phase 4: 다양한 플랫폼 데이터 파싱 지원
-
-## Technical Challenges & Lessons
-
-OAuth 2.0 인증 문제: Manifest V3 환경에서 identity API 사용 시 발생하는 스코프 에러와 Client ID 일치 문제를 해결하며 브라우저 보안 메커니즘을 이해함.
-
-비동기 처리: Callback 방식의 Chrome API를 Promise로 래핑하여 async/await 구조로 개선, 코드 가독성과 유지보수성 향상.
+- [ ] Phase 4: 다양한 플랫폼 데이터 파싱 지원
