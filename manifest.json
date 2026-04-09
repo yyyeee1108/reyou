@@ -25,19 +25,29 @@
   "side_panel": {
     "default_path": "popup/popup.html"
   },
-  "host_permissions": ["https://youtube.com/*", "https://www.youtube.com/*"],
+  "host_permissions": [
+    "https://youtube.com/*",
+    "https://www.youtube.com/*",
+    "https://www.googleapis.com/*"
+  ],
   "permissions": [
     "storage",
     "alarms",
     "tabs",
     "scripting",
     "notifications",
-    "sidePanel"
+    "sidePanel",
+    "identity"
   ],
   "content_scripts": [
     {
       "matches": ["*://www.youtube.com/playlist*"],
       "js": ["content.js"]
     }
-  ]
+  ],
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA63Vesv3bnw1vkboT9Z4O/vugnBTzhuXKMnEw/BDPxuUr2pAnSF1lYd7kSFQDrHj7RPQe58B4GaWCOCilu/xustLTuuSzsLmYzbcljVP8ouOd9IhhsrZJz81FGLYjdQkmnOaMPT5AjC1WJFv/ojhpPIW9OTZtHQSwajwjKS441fCKKBDEs58S1JNFSX0f8ujFItZvEo8YRqKHOwxzGjwBbh9lkCI2aHoHuUHtjLioyed1r5mlenx2mXcOrm7KqWJozWYRU5YcD5I+s3TjS/6vb1Tr6y751pdKeI56J8qEei1ElDD16N/G4EnmDBeb5FZ5JQzXqi+LmEzmylAmuqATcwIDAQAB",
+  "oauth2": {
+    "client_id": "805266662026-56a8bdfrhohv4k8rh9esdp0v5osrsd96.apps.googleusercontent.com",
+    "scopes": ["https://www.googleapis.com/auth/youtube.readonly"]
+  }
 }

@@ -39,6 +39,21 @@
 
 - **State/Storage**: chrome.storage.local
 
+## Local Setup
+
+1. Create `config.js` at the project root.
+2. Copy the shape from `config.example.js` and set your YouTube Data API key.
+3. Open `chrome://extensions`.
+4. Turn on Developer mode.
+5. Click `Load unpacked` and select this project root.
+6. If you need Google login, keep the `manifest.json` `key` and `oauth2.client_id` aligned with the Chrome extension registered in Google Cloud.
+
+Notes:
+
+- `config.js` is ignored by git and should stay local.
+- This extension needs access to `https://www.googleapis.com/*` for YouTube Data API requests.
+- The popup/side panel behavior depends on Chrome Extension Manifest V3 support.
+
 ## Roadmap & Future Plans
 
 이 프로젝트는 현재 개발 중입니다.

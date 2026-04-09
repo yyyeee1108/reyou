@@ -1,4 +1,4 @@
-import { initTheme } from '../utils.js';
+import { initTheme } from '../utils/utils.js';
 console.log('[ReYou] add_playlist.js 실행');
 
 initTheme();

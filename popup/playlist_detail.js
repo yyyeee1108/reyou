@@ -5,7 +5,7 @@ import {
   updateReviewState,
   calculateNextDate,
   initTheme,
-} from '../utils.js';
+} from '../utils/utils.js';
 
 console.log('playlist_detail.js 실행');
 
@@ -26,6 +26,8 @@ const data = await getPlaylistData(playlistId);
 
 if (!data) {
   console.log('[ReYou]데이터가 존재하지 않습니다');
+  window.location.href = 'popup.html';
+  throw new Error('Playlist data not found');
 }
 console.log('data:', data);
 
@@ -134,9 +136,9 @@ function renderReviewState(data) {
 }
 
 async function getPlaylistData(playlistId) {
-  const data = (await chrome.storage.local.get('playlists')).playlists[
-    playlistId
-  ];
+  const result = await chrome.storage.local.get('playlists');
+  const playlists = result.playlists || {};
+  const data = playlists[playlistId];
   return data;
 }
 

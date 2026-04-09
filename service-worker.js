@@ -1,5 +1,9 @@
 import { API_KEY } from './config.js';
-import { calculateNextDate, getReviewState, REVIEW_STATE } from './utils.js';
+import {
+  calculateNextDate,
+  getReviewState,
+  REVIEW_STATE,
+} from './utils/utils.js';
 
 console.log('[ReYou] service-worker.js 로드');
 
@@ -8,6 +12,11 @@ const PLAYLIST_ITEMS_URL =
 const PLAYLISTS_URL =
   'https://www.googleapis.com/youtube/v3/playlists?part=snippet,contentDetails,status';
 let refreshFlag = false;
+
+async function getStoredPlaylists() {
+  const { playlists } = await chrome.storage.local.get('playlists');
+  return playlists || {};
+}
 
 // 확장 프로그램 설치 시 작동
 chrome.runtime.onInstalled.addListener(({ reason }) => {
@@ -37,12 +46,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 // storage에 이미 저장된 키인지 확인(중복 확인)
 async function isDupllicatePlaylistId(id) {
-  const { playlists } = await chrome.storage.local.get('playlists');
-  if (playlists) {
-    console.log('playlists dup:', playlists);
-    return id in playlists;
-  }
-  return false;
+  const playlists = await getStoredPlaylists();
+  console.log('playlists dup:', playlists);
+  return id in playlists;
 }
 
 // 재생목록 영상 목록 얻기
@@ -73,8 +79,12 @@ async function getPlaylistVideos(
     },
   });
 
+  if (!response.ok) {
+    throw new Error(`Failed to fetch playlist videos: ${response.status}`);
+  }
+
   const data = await response.json();
-  const items = data.items;
+  const items = data.items || [];
   console.log('items: ', items);
   items.forEach((item, index) => {
     const privacyStatus = item.status.privacyStatus;
@@ -121,7 +131,7 @@ async function getPlaylistVideos(
       reviewCount: 0,
       isCompleted: false,
     };
-    const { playlists } = await chrome.storage.local.get('playlists');
+    const playlists = await getStoredPlaylists();
 
     playlists[playlistId] = {
       playlistInfo: playlistInfo,
@@ -144,8 +154,15 @@ async function getPlaylistInfo(playlistId) {
     },
   });
 
+  if (!response.ok) {
+    throw new Error(`Failed to fetch playlist info: ${response.status}`);
+  }
+
   const data = await response.json();
-  const item = data.items[0];
+  const item = data.items?.[0];
+  if (!item) {
+    throw new Error('Playlist info not found');
+  }
 
   const title = item.snippet.localized.title;
   const channelName = item.snippet.channelTitle;
@@ -269,7 +286,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 
 // due인 재생목록이 있는지 확인 후 알림
 async function checkDuePlaylists() {
-  const { playlists } = await chrome.storage.local.get('playlists');
+  const playlists = await getStoredPlaylists();
   let filteredData = Object.values(playlists).filter((item) => {
     const reviewState = getReviewState(item);
     return reviewState === REVIEW_STATE.STATUS_DUE;

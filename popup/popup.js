@@ -3,18 +3,43 @@ import {
   REVIEW_STATE,
   getReviewState,
   calculateDday,
-  calculateNextDate,
   initTheme,
   controlSidePanel,
-} from '../utils.js';
+} from '../utils/utils.js';
+import { login, checkAuth } from '../utils/oauth.js';
 
 console.log('[ReYou] popup.js 실행');
 
 // 전역 변수
 let playlists = {}; // 모든 재생목록 저장
 let currentFilter = 'due';
+const googleLoginBtn = document.getElementById('googleLoginBtn');
+const main = document.querySelector('main');
 
 document.addEventListener('DOMContentLoaded', async () => {
+  // 테마 적용
+  await initTheme();
+
+  // 사이드 패널 조작
+  controlSidePanel();
+
+  // 로그인 체크
+  const token = await checkAuth();
+  if (!token) {
+    showLoginUI();
+  }
+
+  if (googleLoginBtn) {
+    googleLoginBtn.addEventListener('click', async () => {
+      try {
+        await login();
+        main.classList.remove('hidden');
+      } catch (e) {
+        console.error('로그인 실패:', e);
+      }
+    });
+  }
+
   // local storage 데이터 로드
   const storageData = await chrome.storage.local.get([
     'playlists',
@@ -37,12 +62,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 버튼 이벤트
   setFilterButtons();
-
-  // 테마 적용
-  await initTheme();
-
-  // 사이드 패널 조작
-  controlSidePanel();
 });
 
 function initFilterButtons() {
@@ -212,4 +231,8 @@ async function checkPlaylistPage() {
       });
     }
   }
+}
+
+function showLoginUI() {
+  main.classList.remove('hidden');
 }
